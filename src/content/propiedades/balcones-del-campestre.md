@@ -8,7 +8,7 @@ featured: false
 order: 2
 available: true
 
-excerpt: Tres plantas en Balcones del Campestre, San Pedro Garza García, con terraza exterior equipada con asador, sala de juegos, jardín interior y climatización zonificada.
+excerpt: Tres plantas en Balcones del Campestre, San Pedro Garza García, con terraza equipada con asador, sala de juegos, jardín interior y climatización zonificada.
 
 cover: ../../assets/images/balconesCampestre/one.png
 coverAlt: Fachada de la residencia Balcones del Campestre
@@ -26,8 +26,10 @@ highlights:
     value: 3 autos
 
 amenities:
-  - label: Terraza con asador
+  - label: Terraza exterior
     value: 50.47 m²
+    icon: sofa
+  - label: Terraza con asador
     icon: flame
   - label: Sala de juegos
     value: 36.27 m²
@@ -194,8 +196,9 @@ podría haber comprimido, en uno de los entornos más seguros de San Pedro Garza
 García. El jardín interior lleva luz natural al corazón de la casa y la terraza
 con asador extiende el área social hacia el exterior sin perder continuidad.
 
-En la planta más baja, la sala de juegos se abre a una terraza de 50 m² y a la
-losa jardín: un piso completo dedicado a reunirse, lejos de las recámaras.
+En la planta más baja conviven la sala de juegos, una terraza exterior de
+50 m² y la losa jardín: un piso completo dedicado a reunirse, lejos de las
+recámaras.
 
 La climatización se divide por zonas: el sistema central TRANE atiende las áreas
 de uso constante y los minisplits cubren el resto, de modo que la casa nunca

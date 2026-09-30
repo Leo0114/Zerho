@@ -1,4 +1,6 @@
 ---
+import { lastItemSpan, type GridColumns } from "@/lib/grid";
+
 /**
  * Especificación constructiva agrupada por familia.
  *
@@ -21,6 +23,13 @@ interface Props {
 }
 
 const { groups, compact = false, class: className = "" } = Astro.props;
+
+// En escritorio, tantas columnas como familias (hasta cuatro): tres familias
+// ocupan el ancho completo en lugar de dejar un hueco esperando una cuarta.
+const LG_COLUMNS = { 1: "lg:grid-cols-1", 2: "lg:grid-cols-2", 3: "lg:grid-cols-3", 4: "lg:grid-cols-4" } as const;
+const lgColumns = Math.min(Math.max(groups.length, 1), 4) as keyof typeof LG_COLUMNS;
+const columns: GridColumns = { base: 1, sm: 2, lg: lgColumns };
+const lastSpan = lastItemSpan(groups.length, columns);
 ---
 
 {
@@ -28,13 +37,16 @@ const { groups, compact = false, class: className = "" } = Astro.props;
     <div
       class:list={[
         "grid gap-px overflow-hidden rounded-panel border border-line bg-line sm:grid-cols-2",
-        groups.length > 2 && "lg:grid-cols-4",
+        LG_COLUMNS[lgColumns],
         className,
       ]}
     >
       {groups.map((group, groupIndex) => (
         <section
-          class="reveal bg-panel px-6 py-6"
+          class:list={[
+            "reveal bg-panel px-6 py-6",
+            groupIndex === groups.length - 1 && lastSpan,
+          ]}
           style={`transition-delay:${Math.min(groupIndex * 40, 200)}ms`}
         >
           <span class="type-label tabular-nums text-accent-deep" aria-hidden="true">

@@ -1,6 +1,7 @@
 ---
 import Icon from "@/components/ui/Icon.astro";
 import { isIconName } from "@/components/ui/icons";
+import { lastItemSpan } from "@/lib/grid";
 
 /**
  * Lo que distingue a la casa: alberca, jacuzzi, terrazas, salas de juego…
@@ -22,19 +23,30 @@ interface Props {
 
 const { items, limit, class: className = "" } = Astro.props;
 const visible = typeof limit === "number" ? items.slice(0, limit) : items;
+// En escritorio se elige la rejilla que reparte las fichas en filas
+// completas (10 → 5 columnas, 9 → 3); si ninguna lo logra, se usan cuatro y
+// la última ficha cierra la fila.
+const LG_COLUMNS = { 3: "lg:grid-cols-3", 4: "lg:grid-cols-4", 5: "lg:grid-cols-5" } as const;
+const lgColumns =
+  ([4, 5, 3] as const).find((cols) => visible.length % cols === 0) ?? 4;
+const lastSpan = lastItemSpan(visible.length, { base: 2, lg: lgColumns });
 ---
 
 {
   visible.length > 0 && (
     <ul
       class:list={[
-        "grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4",
+        "grid grid-cols-2 gap-3 sm:gap-4",
+        LG_COLUMNS[lgColumns],
         className,
       ]}
     >
       {visible.map((item, i) => (
         <li
-          class="reveal flex items-center gap-3.5 rounded-panel border border-line bg-panel px-4 py-4 sm:px-5"
+          class:list={[
+            "reveal flex items-center gap-3.5 rounded-panel border border-line bg-panel px-4 py-4 sm:px-5",
+            i === visible.length - 1 && lastSpan,
+          ]}
           style={`transition-delay:${Math.min(i * 40, 240)}ms`}
         >
           <span

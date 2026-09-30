@@ -3,23 +3,22 @@ import Icon from "./Icon.astro";
 
 /**
  * Botón que abre un `Modal` por su `id`. Existe para que todos los "ver más"
- * de la ficha se vean y se comporten igual.
- *  · `outline` — botón sobre fondo claro
- *  · `glass`   — botón sobre verde o fotografía
- *  · `link`    — enlace discreto dentro de un bloque de texto
+ * de la ficha se vean y se comporten igual: siempre como botón, nunca como
+ * un enlace que se confunde con el texto.
+ *  · `quiet` — sobre fondo claro (filete bronce)
+ *  · `glass` — sobre verde o fotografía
  */
 interface Props {
   target: string;
-  variant?: "outline" | "glass" | "link";
+  variant?: "quiet" | "glass";
   class?: string;
 }
 
-const { target, variant = "outline", class: className = "" } = Astro.props;
+const { target, variant = "quiet", class: className = "" } = Astro.props;
 
 const VARIANT_CLASS = {
-  outline: "btn btn-outline btn-sm",
-  glass: "btn btn-glass btn-sm",
-  link: "inline-flex cursor-pointer items-center gap-2 text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-accent-deep underline-offset-[6px] transition-colors duration-300 hover:text-ink hover:underline",
+  quiet: "btn-quiet",
+  glass: "btn-glass",
 } as const;
 ---
 
@@ -28,7 +27,7 @@ const VARIANT_CLASS = {
   data-modal-open={target}
   aria-haspopup="dialog"
   aria-controls={target}
-  class:list={["group", VARIANT_CLASS[variant], className]}
+  class:list={["btn btn-sm group", VARIANT_CLASS[variant], className]}
 >
   <slot />
   <Icon

@@ -111,9 +111,16 @@ const titleId = `${id}-title`;
     text-wrap: balance;
   }
 
+  /* Se desplaza con el gesto, sin barra: el panel es una hoja, no una
+     ventana con marco. */
   .modal-body {
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+
+  .modal-body::-webkit-scrollbar {
+    display: none;
   }
 
   .modal[data-state="open"] .modal-panel {

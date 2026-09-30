@@ -16,12 +16,14 @@ export const SITE = {
   directorRole: "Dirección de proyecto",
   /** Firma de marca: cierra el pie de todas las fichas. */
   signature: "Construimos su legado, ustedes las historias",
+  // TODO(cliente): datos de contacto provisionales (lorem ipsum). Sustituir
+  // por la persona, el correo y los teléfonos definitivos antes de publicar.
   /** Persona que atiende las visitas; da nombre y rostro al contacto. */
-  contactPerson: "Arq. Ana Treviño Gaona",
-  email: "atrevino@arquitectosasociados.mx",
-  phone: "+52 (81) 1965 8330",
-  phoneHref: "+528119658330",
-  whatsapp: "528119658330",
+  contactPerson: "Lorem Ipsum",
+  email: "lorem@ipsum.mx",
+  phone: "+52 (81) 0000 0000",
+  phoneHref: "+528100000000",
+  whatsapp: "528100000000",
   city: "San Pedro Garza García, Nuevo León",
   instagram: "https://www.instagram.com/",
 } as const;

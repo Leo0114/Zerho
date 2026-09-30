@@ -118,7 +118,7 @@ const MODALS = {
       <div class="reveal max-w-2xl">
         {heading && <h2 class="type-title text-ink">{heading}</h2>}
         {lead && <p class="type-body mt-5 text-muted">{lead}</p>}
-        <ModalTrigger target={MODALS.story} variant="link" class="mt-6">
+        <ModalTrigger target={MODALS.story} class="mt-7">
           Conocer la residencia
         </ModalTrigger>
       </div>
@@ -217,7 +217,7 @@ const MODALS = {
         <span class="font-semibold text-ink">¿Te gusta cómo se ve?</span>
         Los interiores de estas imágenes también son obra nuestra.
       </p>
-      <ModalTrigger target={MODALS.interiors} variant="outline">
+      <ModalTrigger target={MODALS.interiors}>
         {INTERIORS.eyebrow}
       </ModalTrigger>
     </div>
@@ -293,7 +293,7 @@ const MODALS = {
       imageAlt={`Interior de ${data.title}`}
       imageSide="right"
     >
-      <ModalTrigger target={MODALS.specs} variant="outline" class="mt-8">
+      <ModalTrigger target={MODALS.specs} class="mt-8">
         Ficha completa
       </ModalTrigger>
     </SplitFeature>

@@ -18,8 +18,9 @@ import scrollLogo from "@/assets/scrollLogo.png";
  * cambia a su versión en color, y aparece el índice. El cambio lo dispara un
  * centinela colocado al final del hero, no un umbral de píxeles.
  *
- * En móvil no hay índice de secciones: la ficha se recorre con el pulgar y la
- * única acción fija es agendar la visita (`StickyVisit`).
+ * En móvil no hay índice de secciones y la marca se queda siempre al centro:
+ * la ficha se recorre con el pulgar y la única acción fija es agendar la
+ * visita (`StickyVisit`).
  */
 interface Props {
   /** Slug de la residencia que se está viendo, para marcarla en el menú. */
@@ -157,12 +158,27 @@ const LOGO_IMAGE = {
      La cabecera es contenedor de consulta: `100cqw` es su ancho real (sin la
      barra de scroll), así el centrado se resuelve en CSS, sin medir en JS
      ni parpadear en el primer pintado. Las variables replican el ritmo de
-     `.container-x`.                                                        */
+     `.container-x`.
+
+     · Móvil: la marca vive siempre al centro; sólo cambia de tamaño y tinta.
+     · Escritorio: centrada sobre el hero, a la izquierda al hacer scroll,
+       para dejar el centro al índice de secciones.                        */
   .chrome {
     container-type: inline-size;
     --pad: 1.25rem;
     --brand-w: 7.5rem;
     --brand-hero-scale: 1.2;
+    /* Desplazamiento desde su sitio en el flujo hasta el centro exacto. */
+    --brand-center: calc(
+      min(100cqw, 84rem) / 2 - var(--pad) - var(--brand-w) / 2
+    );
+    --brand-x: var(--brand-center);
+    --brand-scale: 1;
+  }
+
+  .chrome[data-chrome="hero"] {
+    --brand-x: var(--brand-center);
+    --brand-scale: var(--brand-hero-scale);
   }
 
   @media (min-width: 640px) {
@@ -175,6 +191,7 @@ const LOGO_IMAGE = {
     .chrome {
       --brand-w: 9rem;
       --brand-hero-scale: 1.3;
+      --brand-x: 0px;
     }
   }
 
@@ -188,17 +205,8 @@ const LOGO_IMAGE = {
     width: var(--brand-w);
     aspect-ratio: 3 / 1;
     transform-origin: center;
+    transform: translate3d(var(--brand-x), 0, 0) scale(var(--brand-scale));
     transition: transform 700ms var(--ease-out-quint);
-  }
-
-  /* Arriba: centrada y algo mayor. Al hacer scroll vuelve a su sitio. */
-  .chrome[data-chrome="hero"] .brand {
-    transform: translate3d(
-        calc(min(100cqw, 84rem) / 2 - var(--pad) - var(--brand-w) / 2),
-        0,
-        0
-      )
-      scale(var(--brand-hero-scale));
   }
 
   .brand:active {
@@ -266,10 +274,6 @@ const LOGO_IMAGE = {
       transition: opacity 160ms linear;
     }
 
-    /* Sin desplazamiento: el logotipo aparece ya en su sitio. */
-    .chrome[data-chrome="hero"] .brand {
-      transform: none;
-    }
   }
 </style>
 
