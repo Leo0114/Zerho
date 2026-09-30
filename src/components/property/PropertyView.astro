@@ -1,18 +1,25 @@
 ---
 import { render } from "astro:content";
 
-import { COMMITMENTS, PROMISE, WARRANTY } from "@/data/site";
+import {
+  COMMITMENTS,
+  INTERIORS,
+  PROMISE,
+  WARRANTY,
+  whatsappHref,
+} from "@/data/site";
 import {
   formatPrice,
+  getLead,
   getOtherProperties,
   type Property,
 } from "@/lib/properties";
-import { pickGalleryImage } from "@/lib/gallery";
+import { pickRandomGalleryImage } from "@/lib/gallery";
 
 import PropertyHero from "@/components/shared/PropertyHero.astro";
 import SectionHeader from "@/components/shared/SectionHeader.astro";
 import SpecSheet from "@/components/shared/SpecSheet.astro";
-import FeatureList from "@/components/shared/FeatureList.astro";
+import AmenityList from "@/components/shared/AmenityList.astro";
 import SplitFeature from "@/components/shared/SplitFeature.astro";
 import ConstructionSpec from "@/components/shared/ConstructionSpec.astro";
 import Gallery from "@/components/shared/Gallery.astro";
@@ -21,14 +28,21 @@ import PillarGrid from "@/components/shared/PillarGrid.astro";
 import Statement from "@/components/shared/Statement.astro";
 import PropertyCard from "@/components/shared/PropertyCard.astro";
 import CtaSection from "@/components/shared/CtaSection.astro";
+import Button from "@/components/ui/Button.astro";
+import Modal from "@/components/ui/Modal.astro";
+import ModalTrigger from "@/components/ui/ModalTrigger.astro";
 
 /**
  * Ficha completa de una residencia.
  *
  * Es el único montaje de página del sitio: la portada y `/[slug]` se limitan a
- * elegir qué propiedad le pasan. Así las tres fichas no pueden divergir —ni en
- * orden de secciones, ni en anclas, ni en ritmo— por mucho que crezca el
- * contenido de cada .md.
+ * elegir qué propiedad le pasan. Así las fichas no pueden divergir —ni en
+ * orden de secciones, ni en anclas, ni en ritmo—.
+ *
+ * El orden sigue la decisión del comprador: qué casa es y dónde está, quién la
+ * respalda, cómo se ve, cómo se distribuye y, al final, el detalle técnico
+ * para comparar. La página enseña lo esencial; el texto largo se abre bajo
+ * demanda en modales, nunca se impone.
  */
 interface Props {
   property: Property;
@@ -38,15 +52,23 @@ const { property } = Astro.props;
 const { data } = property;
 
 const { Content } = await render(property);
+const { heading, lead } = getLead(property);
 const others = await getOtherProperties(property);
 
-// Las tres fichas comparten juego de fotos; el desplazamiento por `order` hace
-// que cada una abra sus bloques con una imagen distinta.
-const constructionImage = pickGalleryImage(
+const featureImage = pickRandomGalleryImage(
   data.galleryDir,
-  data.order * 3 + 5,
+  data.cover,
   data.cover,
 );
+
+/** Ids de modal únicos por ficha: evita choques entre navegaciones. */
+const modalId = (name: string) => `${property.id}-${name}`;
+const MODALS = {
+  story: modalId("historia"),
+  commitment: modalId("compromiso"),
+  interiors: modalId("interiorismo"),
+  specs: modalId("ficha"),
+} as const;
 ---
 
 <PropertyHero
@@ -61,7 +83,7 @@ const constructionImage = pickGalleryImage(
   highlights={data.highlights}
 />
 
-{/* --- Presentación editorial ------------------------------------------- */}
+{/* --- Residencia: lo esencial para decidir una visita ----------------------- */}
 <section class="section-y">
   <div class="container-x grid gap-12 lg:grid-cols-[17rem_1fr] lg:gap-20">
     <div class="reveal lg:sticky lg:top-[calc(var(--chrome-h)+3rem)] lg:self-start">
@@ -70,9 +92,9 @@ const constructionImage = pickGalleryImage(
         La residencia
       </p>
 
-      <dl class="mt-8 space-y-6">
-        <div>
-          <dt class="type-eyebrow text-muted">Ubicación</dt>
+      <dl class="mt-8 grid grid-cols-2 gap-6 lg:grid-cols-1">
+        <div class="col-span-2 lg:col-span-1">
+          <dt class="type-eyebrow text-muted">Ubicación exclusiva</dt>
           <dd class="mt-2 text-[0.95rem] leading-snug text-ink">
             {data.location}
           </dd>
@@ -92,66 +114,92 @@ const constructionImage = pickGalleryImage(
       </dl>
     </div>
 
-    <div class="reveal prose prose-zerho max-w-none lg:prose-lg">
-      <Content />
+    <div>
+      <div class="reveal max-w-2xl">
+        {heading && <h2 class="type-title text-ink">{heading}</h2>}
+        {lead && <p class="type-body mt-5 text-muted">{lead}</p>}
+        <ModalTrigger target={MODALS.story} variant="link" class="mt-6">
+          Conocer la residencia
+        </ModalTrigger>
+      </div>
+
+      <AmenityList items={data.amenities} limit={4} class="mt-12" />
     </div>
   </div>
+
+  <Modal id={MODALS.story} eyebrow="La residencia" title={data.title}>
+    <div class="prose prose-zerho max-w-none">
+      <Content />
+    </div>
+  </Modal>
 </section>
 
-{/* --- Características y especificación constructiva --------------------- */}
+{/* --- Compromiso ------------------------------------------------------------ */}
 <section
-  id="caracteristicas"
-  class="section-anchor section-y hairline-t bg-panel/60"
+  id="compromiso"
+  class="section-anchor section-y bg-primary text-on-primary"
 >
   <div class="container-x">
     <SectionHeader
-      eyebrow="Ficha técnica"
-      title="Características principales"
-      description="Las cifras que definen la casa, tomadas del proyecto ejecutivo."
+      tone="dark"
+      eyebrow={PROMISE.eyebrow}
+      title={PROMISE.title}
+      description={PROMISE.lead}
     />
 
-    <SpecSheet items={data.specs} class="mt-12" />
+    <PillarGrid
+      items={COMMITMENTS}
+      tone="dark"
+      variant="bare"
+      columns={5}
+      compact
+      class="mt-12"
+    />
 
-    {
-      data.features.length > 0 && (
-        <FeatureList
-          items={data.features}
-          variant="columns"
-          class="mt-14 max-w-5xl"
-        />
-      )
-    }
+    <div class="reveal mt-10">
+      <ModalTrigger target={MODALS.commitment} variant="glass">
+        Cómo trabajamos
+      </ModalTrigger>
+    </div>
 
-    {
-      data.construction.length > 0 && (
-        <>
-          <SplitFeature
-            class="mt-24 lg:mt-32"
-            eyebrow="Especificación constructiva"
-            title="Lo que se firma es lo que se construye"
-            body={[
-              "Cada partida está definida por marca, sistema y espesor desde el proyecto ejecutivo, no durante la obra. Esa es la condición que hace posible un contrato a precio alzado.",
-              "La misma especificación es la que se verifica en cada aportación programada: el avance que se paga es el avance que se puede revisar en sitio.",
-            ]}
-            image={constructionImage}
-            imageAlt={`Detalle constructivo de ${data.title}`}
-            imageSide="right"
-          />
-
-          <ConstructionSpec groups={data.construction} class="mt-20 lg:mt-24" />
-        </>
-      )
-    }
+    <Statement
+      class="mt-14"
+      figure={WARRANTY.years}
+      figureUnit="años"
+      title={WARRANTY.title}
+      body={WARRANTY.body}
+    />
   </div>
+
+  <Modal id={MODALS.commitment} eyebrow={PROMISE.eyebrow} title="Cómo trabajamos" size="lg">
+    <p class="type-body text-muted">{PROMISE.body}</p>
+    <ol class="mt-8 grid gap-x-10 gap-y-7 md:grid-cols-2">
+      {
+        COMMITMENTS.map((item, i) => (
+          <li>
+            <span class="type-label tabular-nums text-accent-deep">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 class="mt-2 text-[1.05rem] font-semibold leading-snug tracking-[-0.01em] text-ink">
+              {item.title}
+            </h3>
+            <p class="mt-1.5 text-[0.93rem] leading-relaxed text-muted">
+              {item.body}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+  </Modal>
 </section>
 
-{/* --- Galería ----------------------------------------------------------- */}
+{/* --- Galería --------------------------------------------------------------- */}
 <section id="galeria" class="section-anchor section-y">
   <div class="container-x">
     <SectionHeader
       eyebrow="Galería"
       title="Recorrido visual"
-      description="Imágenes de referencia del nivel de acabado y de la atmósfera del proyecto."
+      description="Toca cualquier imagen para recorrerla a pantalla completa."
     />
 
     <Gallery
@@ -160,10 +208,39 @@ const constructionImage = pickGalleryImage(
       layout="mosaic"
       class="mt-12"
     />
+
+    {/* Interiorismo: una invitación discreta, no un anuncio */}
+    <div
+      class="reveal mt-10 flex flex-col items-start gap-4 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="max-w-xl text-[0.95rem] leading-relaxed text-muted">
+        <span class="font-semibold text-ink">¿Te gusta cómo se ve?</span>
+        Los interiores de estas imágenes también son obra nuestra.
+      </p>
+      <ModalTrigger target={MODALS.interiors} variant="outline">
+        {INTERIORS.eyebrow}
+      </ModalTrigger>
+    </div>
   </div>
+
+  <Modal id={MODALS.interiors} eyebrow={INTERIORS.eyebrow} title={INTERIORS.title}>
+    <p class="type-subheading text-ink">{INTERIORS.lead}</p>
+    {INTERIORS.body.map((paragraph) => <p class="type-body mt-4 text-muted">{paragraph}</p>)}
+    <Fragment slot="footer">
+      <Button
+        href={whatsappHref(data.title, "interiores")}
+        external
+        variant="primary"
+        size="sm"
+        icon="arrow-right"
+      >
+        {INTERIORS.cta}
+      </Button>
+    </Fragment>
+  </Modal>
 </section>
 
-{/* --- Planos ------------------------------------------------------------ */}
+{/* --- Planos ---------------------------------------------------------------- */}
 {
   data.plans.length > 0 && (
     <section
@@ -174,59 +251,87 @@ const constructionImage = pickGalleryImage(
         <SectionHeader
           eyebrow="Planos"
           title="Distribución por nivel"
-          description="Toca cualquier lámina para verla a pantalla completa."
+          description="Amplía una lámina para recorrer todas las plantas."
         />
 
-        <PlansViewer plans={data.plans} subject={data.title} class="mt-12" />
+        <PlansViewer plans={data.plans} subject={data.title} class="mt-10" />
       </div>
     </section>
   )
 }
 
-{/* --- Compromiso y garantía --------------------------------------------- */}
+{/* --- Características: el detalle para comparar ----------------------------- */}
 <section
-  id="compromiso"
-  class="section-anchor section-y bg-primary text-on-primary"
+  id="caracteristicas"
+  class:list={[
+    "section-anchor section-y",
+    data.plans.length === 0 && "hairline-t",
+  ]}
 >
   <div class="container-x">
-    <SectionHeader
-      tone="dark"
-      eyebrow={PROMISE.eyebrow}
-      title={PROMISE.title}
-      description={PROMISE.body}
-    />
+    <SectionHeader eyebrow="Ficha técnica" title="Características principales" />
 
-    <PillarGrid
-      items={COMMITMENTS}
-      tone="dark"
-      columns={3}
-      class="mt-14"
-    />
+    <SpecSheet items={data.specs} compact class="mt-10" />
 
-    <Statement
-      class="mt-12"
-      figure={WARRANTY.years}
-      figureUnit="años"
-      title={WARRANTY.title}
-      body={WARRANTY.body}
-    />
+    {
+      data.amenities.length > 0 && (
+        <>
+          <h3 class="reveal type-eyebrow mt-14 text-muted">Lo que la distingue</h3>
+          <AmenityList items={data.amenities} class="mt-5" />
+        </>
+      )
+    }
+
+    <SplitFeature
+      class="mt-20 lg:mt-28"
+      eyebrow="Especificación constructiva"
+      title="Lo que se firma es lo que se construye"
+      body={[
+        "Cada partida queda definida por marca, sistema y espesor desde el proyecto ejecutivo. Por eso podemos firmar a precio alzado.",
+      ]}
+      image={featureImage}
+      imageAlt={`Interior de ${data.title}`}
+      imageSide="right"
+    >
+      <ModalTrigger target={MODALS.specs} variant="outline" class="mt-8">
+        Ficha completa
+      </ModalTrigger>
+    </SplitFeature>
+
+    {
+      data.construction.length > 0 && (
+        <ConstructionSpec groups={data.construction} compact class="mt-14" />
+      )
+    }
   </div>
+
+  <Modal id={MODALS.specs} eyebrow="Ficha técnica" title={`${data.title}, a detalle`} size="lg">
+    <SpecSheet items={data.specs} />
+    {
+      data.construction.length > 0 && (
+        <>
+          <h3 class="type-eyebrow mb-6 mt-10 text-muted">Especificación constructiva</h3>
+          <ConstructionSpec groups={data.construction} />
+        </>
+      )
+    }
+  </Modal>
 </section>
 
-{/* --- Otras residencias -------------------------------------------------- */}
+{/* --- Otras oportunidades --------------------------------------------------- */}
 {
   others.length > 0 && (
-    <section id="otras" class="section-anchor section-y">
+    <section id="otras" class="section-anchor section-y hairline-t bg-panel/60">
       <div class="container-x">
         <SectionHeader
-          eyebrow="Portafolio"
-          title="Otras residencias"
-          description="El mismo estándar constructivo y el mismo compromiso, en otras ubicaciones."
+          eyebrow="Otras oportunidades"
+          title="Más residencias en San Pedro"
+          description="El mismo estándar constructivo y el mismo compromiso."
         />
 
         <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:gap-8">
           {others.map((other, i) => (
-            <div class="reveal" style={`transition-delay:${i * 90}ms`}>
+            <div class="reveal" style={`transition-delay:${i * 60}ms`}>
               <PropertyCard property={other} />
             </div>
           ))}
@@ -236,9 +341,9 @@ const constructionImage = pickGalleryImage(
   )
 }
 
-{/* --- Contacto ----------------------------------------------------------- */}
+{/* --- Visita ---------------------------------------------------------------- */}
 <CtaSection
   propertyTitle={data.title}
-  title={`Conozcamos ${data.title} juntos`}
-  description="Agenda un recorrido con el equipo directivo y resolvamos, en una sola conversación, el proyecto, los tiempos y el esquema de aportaciones."
+  title={`Recorre ${data.title} en persona`}
+  description="Te acompañamos a conocerla y, en una sola conversación, resolvemos juntos el proyecto, los tiempos y el esquema de aportaciones."
 />

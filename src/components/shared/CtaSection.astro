@@ -5,8 +5,8 @@ import { SITE, mailHref, whatsappHref } from "@/data/site";
 
 /**
  * Cierre de la ficha. No es un formulario: para una operación de ocho cifras,
- * lo que el comprador quiere es hablar con alguien, y los dos canales que ya
- * usa son WhatsApp y el correo.
+ * lo que el comprador quiere es hablar con alguien —con nombre y apellido— y
+ * conocer la casa en persona. El tono es de invitación, no de trámite.
  */
 interface Props {
   /** Residencia sobre la que se contacta; prellena mensaje y asunto. */
@@ -19,7 +19,7 @@ interface Props {
 
 const {
   propertyTitle,
-  eyebrow = "Contacto",
+  eyebrow = "Visítanos",
   title,
   description,
   class: className = "",
@@ -29,7 +29,9 @@ const {
 <section
   id="contacto"
   class:list={[
-    "section-anchor section-y bg-primary text-on-primary",
+    // `overflow-x-clip`: el halo decorativo sobresale a propósito, pero en
+    // móvil no debe ensanchar la página (Safari amplía el viewport).
+    "section-anchor section-y overflow-x-clip bg-primary text-on-primary",
     className,
   ]}
 >
@@ -57,8 +59,13 @@ const {
           )
         }
 
+        <p class="mt-8 text-[0.95rem] text-on-primary">
+          <span class="text-on-primary/60">Te atiende</span>
+          {SITE.contactPerson}
+        </p>
+
         <div
-          class="mt-8 flex flex-col gap-3 text-[0.95rem] text-on-primary/70 sm:flex-row sm:flex-wrap sm:gap-x-8"
+          class="mt-4 flex flex-col gap-3 text-[0.95rem] text-on-primary/70 sm:flex-row sm:flex-wrap sm:gap-x-8"
         >
           <a
             href={`tel:${SITE.phoneHref}`}
@@ -84,10 +91,10 @@ const {
           variant="on-primary"
           icon="arrow-right"
         >
-          Agendar recorrido
+          Agendar visita
         </Button>
-        <Button href={mailHref(propertyTitle)} variant="glass">
-          Solicitar información
+        <Button href={`tel:${SITE.phoneHref}`} variant="glass">
+          Hablemos
         </Button>
       </div>
     </div>

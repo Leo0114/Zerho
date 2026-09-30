@@ -8,12 +8,12 @@ featured: true
 order: 1
 available: true
 
-excerpt: Una residencia de dos niveles sobre 1,067 m² de terreno en un fraccionamiento de máxima seguridad, con alberca, jardín posterior plano y acabados de autor en mármol y madera de banack.
+excerpt: Dos niveles sobre 1,067 m² de terreno en un fraccionamiento privado de San Pedro Garza García, con alberca, jacuzzi, carril de nado y un jardín plano de 387 m².
 
-cover: ../../assets/images/casa.jpg
-coverAlt: Fachada principal de la residencia Encinos 8 al atardecer
+cover: ../../assets/images/encinos8/one.jpg.jpeg
+coverAlt: Fachada principal de la residencia Encinos 8 con alberca y jardín
 
-galleryDir: images/gal/prueba
+galleryDir: images/encinos8
 
 highlights:
   - label: Terreno
@@ -25,10 +25,34 @@ highlights:
   - label: Cochera
     value: 4 autos
 
+amenities:
+  - label: Alberca
+    value: 59.36 m²
+    icon: pool
+  - label: Jacuzzi
+    icon: waves
+  - label: Carril de nado
+    icon: waves
+  - label: Jardín plano
+    value: 387.74 m²
+    icon: tree
+  - label: Sala formal a doble altura
+    icon: height
+  - label: Asoleadero
+    icon: sun
+  - label: Biblioteca
+    icon: book
+  - label: Bar
+    icon: wine
+  - label: Gaming room
+    icon: gamepad
+  - label: Terraza cubierta
+    icon: sofa
+
 specs:
   - label: Ubicación
-    value: Fraccionamiento privado, San Pedro Garza García
-    note: Máxima seguridad y prestigio
+    value: San Pedro Garza García
+    note: Fraccionamiento privado de máxima seguridad y prestigio
     icon: map-pin
   - label: Frente
     value: 19.82 m
@@ -51,6 +75,7 @@ specs:
     icon: bath
   - label: Alberca
     value: 59.36 m²
+    note: Con jacuzzi, asoleadero y carril de nado
     icon: pool
   - label: Jardín posterior
     value: 387.74 m²
@@ -60,14 +85,6 @@ specs:
     value: 4 vehículos
     note: Techada
     icon: car
-
-features:
-  - Fraccionamiento de máxima seguridad y prestigio en San Pedro, con un frente de 19.82 metros.
-  - 1,067.37 m² de terreno y 882.07 m² de construcción funcional resuelta en dos niveles.
-  - Cuatro amplias recámaras, todas con baño completo y vestidor propio.
-  - Cinco baños completos y tres medios baños, distribuidos para residentes e invitados.
-  - Alberca de 59.36 m² y 387.74 m² de jardín posterior plano, 100% aprovechable.
-  - Cochera techada con espacio para cuatro vehículos.
 
 construction:
   - group: Envolvente y confort
@@ -89,33 +106,65 @@ construction:
       - title: Roperías y vestidores de diseñador
         body: Walk-in closets en madera de banack hechos a la medida, organizados con cajoneras anchas de 90 cm y herrajes Blum con sistema de cierre perfecto.
 
-# Planos de muestra. Sustituir por los archivos definitivos del proyecto
-# ejecutivo cuando estén liberados.
+# TODO(cliente): las láminas son de muestra. Sustituir `image` por los planos
+# definitivos del proyecto ejecutivo cuando estén liberados.
 plans:
   - label: Planta baja
-    caption: Acceso, áreas sociales, cocina, terraza y conexión directa con jardín y alberca.
+    caption: Áreas sociales a doble altura, cocina y terraza abiertas al jardín y la alberca.
     image: ../../assets/images/gal/prueba/kara-eads-L7EwHkq1B2s-unsplash.jpg
+    spaces:
+      - name: Cochera para 4 vehículos
+      - name: Acceso y recibidor
+      - name: Medio baño de visitas
+      - name: Biblioteca
+      - name: Sala formal a doble altura
+      - name: Área de piano
+      - name: Comedor formal
+      - name: Bar
+      - name: Antecomedor y estancia familiar
+      - name: Cocina y alacena
+      - name: Lavandería y patio de servicio
+      - name: Cuarto de servicio con baño
+      - name: Terraza cubierta
+      - name: Jardín
+        area: 387.74 m²
+      - name: Alberca
+        area: 59.36 m²
+      - name: Jacuzzi, asoleadero y carril de nado
   - label: Planta alta
-    caption: Cuatro recámaras con baño completo y vestidor, más sala familiar.
+    caption: Cuatro recámaras con baño y vestidor, estancia familiar y gaming room.
     image: ../../assets/images/gal/prueba/han-han-J2LNF6twaF8-unsplash.jpg
-  - label: Conjunto
-    caption: Implantación en el terreno — 387.74 m² de jardín posterior plano y alberca de 59.36 m².
-    image: ../../assets/images/gal/prueba/werner-sevenster-JuP0ZG0UNi0-unsplash.jpg
+    spaces:
+      - name: Recámara principal con baño y doble vestidor
+      - name: Recámara 1 con baño, vestidor y balcón
+      - name: Recámara 2 con baño y vestidor
+      - name: Recámara 3 con baño, vestidor y balcón
+      - name: Estancia
+      - name: Gaming room
+      - name: Terraza exterior
+      - name: Vacío a doble altura sobre la sala formal
 
 seo:
   title: Encinos 8 — Residencia en preventa en San Pedro Garza García
-  description: Residencia de 882 m² sobre 1,067 m² de terreno en San Pedro Garza García. Cuatro recámaras, alberca, jardín plano y garantía de diez años.
+  description: Residencia de 882 m² sobre 1,067 m² de terreno en San Pedro Garza García. Cuatro recámaras, alberca con jacuzzi y carril de nado, jardín plano y garantía de diez años.
 ---
 
 ## Una casa pensada para quedarse
 
 Encinos 8 se resuelve en dos niveles sobre un terreno excepcional de más de mil
-metros cuadrados. La planta baja abre por completo hacia el jardín posterior
-—plano y aprovechable en su totalidad— de modo que la vida social de la casa
-sucede entre el interior y el exterior sin escalones ni fronteras.
+metros cuadrados, en una de las zonas más exclusivas de San Pedro Garza García.
+La planta baja abre por completo hacia el jardín posterior —plano y aprovechable
+en su totalidad— de modo que la vida social sucede entre el interior y el
+exterior sin escalones ni fronteras.
+
+Alrededor de la alberca se reúnen el jacuzzi, el asoleadero y un carril de nado:
+el jardín no es un fondo, es la estancia principal de la casa. Dentro, la sala
+formal a doble altura, la biblioteca y el bar ordenan la vida social; la cocina
+y la estancia familiar, la de todos los días.
 
 La planta alta reúne cuatro recámaras, cada una con baño completo y vestidor
-propio, con la privacidad resuelta desde el trazo y no como un añadido.
+propio, más una estancia y un gaming room para la familia, con la privacidad
+resuelta desde el trazo y no como un añadido.
 
 > Entendemos que tu hogar es el activo más importante de tu patrimonio y el
 > espacio donde tu familia construirá sus mejores recuerdos.

@@ -7,6 +7,7 @@ import SiteHeader from "@/components/shared/SiteHeader.astro";
 import SiteFooter from "@/components/shared/SiteFooter.astro";
 import ScrollReveal from "@/components/shared/ScrollReveal.astro";
 import ScrollTop from "@/components/shared/ScrollTop.astro";
+import StickyVisit from "@/components/shared/StickyVisit.astro";
 
 interface Props {
   title: string;
@@ -43,8 +44,8 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} · ${SITE.name}`
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#333a30" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/ico.png" />
+    <link rel="icon" href="/ico.png" />
 
     <SEO
       title={fullTitle}
@@ -99,6 +100,7 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} · ${SITE.name}`
 
     <SiteFooter propertyTitle={propertyTitle} currentId={currentId} />
 
+    {showSections && <StickyVisit propertyTitle={propertyTitle} />}
     <ScrollTop />
     <ScrollReveal />
   </body>

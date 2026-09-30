@@ -1,0 +1,63 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import { isIconName } from "@/components/ui/icons";
+
+/**
+ * Lo que distingue a la casa: alberca, jacuzzi, terrazas, salas de juego…
+ * Es lo primero que un comprador recuerda de una visita, así que se presenta
+ * como fichas cortas —icono, nombre y cifra— y no enterrado en un párrafo.
+ */
+interface Amenity {
+  label: string;
+  value?: string;
+  icon?: string;
+}
+
+interface Props {
+  items: readonly Amenity[];
+  /** Muestra sólo las primeras N (resumen); el resto vive en otra vista. */
+  limit?: number;
+  class?: string;
+}
+
+const { items, limit, class: className = "" } = Astro.props;
+const visible = typeof limit === "number" ? items.slice(0, limit) : items;
+---
+
+{
+  visible.length > 0 && (
+    <ul
+      class:list={[
+        "grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4",
+        className,
+      ]}
+    >
+      {visible.map((item, i) => (
+        <li
+          class="reveal flex items-center gap-3.5 rounded-panel border border-line bg-panel px-4 py-4 sm:px-5"
+          style={`transition-delay:${Math.min(i * 40, 240)}ms`}
+        >
+          <span
+            class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent/12 text-accent-deep"
+            aria-hidden="true"
+          >
+            <Icon
+              name={isIconName(item.icon) ? item.icon : "check"}
+              class="h-[1.15rem] w-[1.15rem]"
+            />
+          </span>
+          <span class="flex min-w-0 flex-col gap-1">
+            <span class="text-[0.9rem] font-semibold leading-tight tracking-[-0.005em] text-ink">
+              {item.label}
+            </span>
+            {item.value && (
+              <span class="text-[0.8rem] tabular-nums leading-none text-muted">
+                {item.value}
+              </span>
+            )}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}

@@ -13,7 +13,9 @@ interface Props {
   items: readonly Pillar[];
   variant?: "card" | "bare";
   tone?: "light" | "dark";
-  columns?: 2 | 3 | 4;
+  columns?: 2 | 3 | 4 | 5;
+  /** Sólo número y título; el desarrollo se lee bajo demanda. */
+  compact?: boolean;
   class?: string;
 }
 
@@ -22,6 +24,7 @@ const {
   variant = "card",
   tone = "light",
   columns = 3,
+  compact = false,
   class: className = "",
 } = Astro.props;
 
@@ -31,6 +34,7 @@ const COLUMN_CLASS = {
   2: "sm:grid-cols-2",
   3: "sm:grid-cols-2 lg:grid-cols-3",
   4: "sm:grid-cols-2 lg:grid-cols-4",
+  5: "sm:grid-cols-2 lg:grid-cols-5",
 } as const;
 ---
 
@@ -48,7 +52,7 @@ const COLUMN_CLASS = {
               ? "border-t border-white/15 pt-6"
               : "border-t border-line pt-6",
         ]}
-        style={`transition-delay:${Math.min(i * 70, 350)}ms`}
+        style={`transition-delay:${Math.min(i * 40, 240)}ms`}
       >
         <span
           class:list={[
@@ -67,14 +71,16 @@ const COLUMN_CLASS = {
         >
           {item.title}
         </h3>
-        <p
-          class:list={[
-            "mt-3 text-[0.95rem] leading-relaxed",
-            isDark ? "text-on-primary/65" : "text-muted",
-          ]}
-        >
-          {item.body}
-        </p>
+        {!compact && (
+          <p
+            class:list={[
+              "mt-3 text-[0.95rem] leading-relaxed",
+              isDark ? "text-on-primary/65" : "text-muted",
+            ]}
+          >
+            {item.body}
+          </p>
+        )}
       </li>
     ))
   }

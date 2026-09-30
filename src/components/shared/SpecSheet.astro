@@ -1,5 +1,6 @@
 ---
-import Icon, { type IconName } from "@/components/ui/Icon.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { isIconName } from "@/components/ui/icons";
 
 /**
  * Ficha técnica. Es la tabla que el comprador compara entre residencias, así
@@ -17,37 +18,40 @@ interface Spec {
 interface Props {
   items: readonly Spec[];
   columns?: 2 | 3;
+  /** Sólo etiqueta y cifra: los matices quedan para la ficha completa. */
+  compact?: boolean;
   class?: string;
 }
 
-const { items, columns = 3, class: className = "" } = Astro.props;
+const {
+  items,
+  columns = 3,
+  compact = false,
+  class: className = "",
+} = Astro.props;
 
 const COLUMN_CLASS = {
   2: "sm:grid-cols-2",
   3: "sm:grid-cols-2 lg:grid-cols-3",
 } as const;
-
-const KNOWN_ICONS = new Set<IconName>([
-  "map-pin",
-  "ruler",
-  "layers",
-  "bed",
-  "bath",
-  "pool",
-  "tree",
-  "car",
-]);
-
-const isIconName = (value?: string): value is IconName =>
-  Boolean(value) && KNOWN_ICONS.has(value as IconName);
 ---
 
-<dl class:list={["grid gap-px overflow-hidden rounded-panel border border-line bg-line", COLUMN_CLASS[columns], className]}>
+<dl
+  class:list={[
+    "grid gap-px overflow-hidden rounded-panel border border-line bg-line",
+    compact ? "grid-cols-2" : "",
+    COLUMN_CLASS[columns],
+    className,
+  ]}
+>
   {
     items.map((item, i) => (
       <div
-        class="reveal flex flex-col bg-panel px-6 py-6"
-        style={`transition-delay:${Math.min(i * 45, 320)}ms`}
+        class:list={[
+          "flex flex-col bg-panel",
+          compact ? "reveal px-5 py-5" : "px-6 py-6",
+        ]}
+        style={compact ? `transition-delay:${Math.min(i * 40, 240)}ms` : undefined}
       >
         <dt class="flex items-center gap-2.5">
           {isIconName(item.icon) && (
@@ -56,7 +60,7 @@ const isIconName = (value?: string): value is IconName =>
           <span class="type-eyebrow text-muted">{item.label}</span>
         </dt>
         <dd class="type-stat mt-3 text-ink">{item.value}</dd>
-        {item.note && (
+        {!compact && item.note && (
           <p class="mt-2.5 text-[0.85rem] leading-snug text-muted">
             {item.note}
           </p>

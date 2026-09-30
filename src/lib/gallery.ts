@@ -15,9 +15,13 @@ const MODULES = import.meta.glob<{ default: ImageMetadata }>(
 
 const CACHE = new Map<string, ImageMetadata[]>();
 
+/** La portada de cada carpeta se llama `one.*` y abre siempre el mosaico. */
+const isCover = (path: string) => /\/one\.[^/]+$/i.test(path);
+
 /**
- * Imágenes de `src/assets/<dir>/`, ordenadas por nombre de archivo para que el
- * orden sea estable entre builds y controlable renombrando.
+ * Imágenes de `src/assets/<dir>/`: primero la portada (`one.*`) y después el
+ * resto por nombre de archivo, para que el orden sea estable entre builds y
+ * controlable renombrando.
  */
 export function getGalleryImages(dir: string): ImageMetadata[] {
   const normalized = dir.replace(/^\/+|\/+$/g, "");
@@ -27,7 +31,9 @@ export function getGalleryImages(dir: string): ImageMetadata[] {
 
   const images = Object.entries(MODULES)
     .filter(([path]) => path.includes(`/assets/${normalized}/`))
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(
+      ([a], [b]) => Number(isCover(b)) - Number(isCover(a)) || a.localeCompare(b),
+    )
     .map(([, mod]) => mod.default);
 
   CACHE.set(normalized, images);
@@ -35,20 +41,18 @@ export function getGalleryImages(dir: string): ImageMetadata[] {
 }
 
 /**
- * Toma una imagen de la carpeta desplazando el índice.
- *
- * Las tres fichas comparten por ahora el mismo juego de fotografías; el
- * desplazamiento hace que cada una abra por una imagen distinta en lugar de
- * repetir la misma composición tres veces.
+ * Una imagen al azar de la carpeta, distinta de `exclude` (normalmente la
+ * portada, que ya abre la ficha). Las fichas se prerenderizan, así que el
+ * azar se resuelve una vez por build: la página publicada es estable.
  */
-export function pickGalleryImage(
+export function pickRandomGalleryImage(
   dir: string,
-  index: number,
   fallback: ImageMetadata,
+  exclude?: ImageMetadata,
 ): ImageMetadata {
-  const images = getGalleryImages(dir);
-  if (!images.length) return fallback;
-  return images[((index % images.length) + images.length) % images.length]!;
+  const pool = getGalleryImages(dir).filter((img) => img.src !== exclude?.src);
+  if (!pool.length) return fallback;
+  return pool[Math.floor(Math.random() * pool.length)]!;
 }
 
 /** Identificador estable y válido como selector CSS para una carpeta. */

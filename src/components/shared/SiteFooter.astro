@@ -1,11 +1,13 @@
 ---
+import { Image } from "astro:assets";
 import { SITE, SECTIONS, mailHref, whatsappHref } from "@/data/site";
 import { getProperties, propertyHref } from "@/lib/properties";
 import Icon from "@/components/ui/Icon.astro";
+import firstLogo from "@/assets/firstLogo.png";
 
 /**
- * Pie sobrio: identidad, contacto, índice y las tres residencias. Sin boletín,
- * sin mapa del sitio inflado — no hay más sitio que esto.
+ * Pie sobrio: identidad, conversación, índice y las demás oportunidades. Sin
+ * boletín, sin mapa del sitio inflado — no hay más sitio que esto.
  */
 interface Props {
   /** Residencia que se está viendo; personaliza los enlaces de contacto. */
@@ -23,24 +25,24 @@ const year = new Date().getFullYear();
     <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr] lg:gap-16">
       <!-- Identidad -->
       <div>
-        <div class="flex items-center gap-3">
-          <span
-            class="grid h-11 w-11 place-items-center rounded-[0.75rem] bg-white/10 font-[family-name:var(--font-display)] text-[1.1rem] leading-none tracking-[-0.04em] ring-1 ring-inset ring-white/15"
-            aria-hidden="true">Z</span
-          >
-          <span class="flex flex-col gap-1.5">
-            <span
-              class="text-[1.1rem] font-semibold uppercase leading-none tracking-[0.3em]"
-              >{SITE.name}</span
-            >
-            <span
-              class="text-[0.58rem] font-medium uppercase leading-none tracking-[0.28em] text-on-primary-muted"
-              >{SITE.slogan}</span
-            >
-          </span>
-        </div>
+        <!-- Logotipo claro: el PNG es cuadrado con aire; la caja 3:1 lo recorta. -->
+        <a href="/" class="block w-44 sm:w-52" aria-label={`${SITE.name} — ${SITE.slogan}`}>
+          <Image
+            src={firstLogo}
+            alt=""
+            width={480}
+            height={480}
+            widths={[240, 480]}
+            sizes="208px"
+            class="aspect-[3/1] h-auto w-full object-cover"
+          />
+        </a>
 
-        <p class="mt-7 max-w-sm text-[0.95rem] leading-relaxed text-on-primary/65">
+        <p class="type-subheading mt-6 max-w-sm font-[family-name:var(--font-display)] text-on-primary/85">
+          {SITE.signature}
+        </p>
+
+        <p class="mt-4 max-w-sm text-[0.95rem] leading-relaxed text-on-primary/60">
           {SITE.description}
         </p>
 
@@ -56,7 +58,7 @@ const year = new Date().getFullYear();
           </a>
           <a href={mailHref(propertyTitle)} class="btn btn-glass btn-sm">
             <Icon name="mail" class="h-4 w-4" strokeWidth={1.8} />
-            Escribir
+            Correo
           </a>
         </div>
       </div>
@@ -67,7 +69,7 @@ const year = new Date().getFullYear();
           id="footer-residencias"
           class="type-eyebrow text-on-primary-muted"
         >
-          Residencias
+          Otras oportunidades
         </h2>
         <ul class="mt-6 space-y-3.5">
           {
@@ -90,10 +92,11 @@ const year = new Date().getFullYear();
         </ul>
       </nav>
 
-      <!-- Contacto e índice -->
+      <!-- Conversación e índice -->
       <div>
-        <h2 class="type-eyebrow text-on-primary-muted">Contacto</h2>
+        <h2 class="type-eyebrow text-on-primary-muted">Conversemos</h2>
         <ul class="mt-6 space-y-3.5 text-[0.95rem] text-on-primary/70">
+          <li class="text-on-primary">{SITE.contactPerson}</li>
           <li>
             <a
               href={`tel:${SITE.phoneHref}`}
@@ -151,7 +154,4 @@ const year = new Date().getFullYear();
       </p>
     </div>
   </div>
-
-  <!-- Aire bajo el pie para que la barra flotante de móvil no tape el aviso -->
-  <div class="h-16 lg:hidden" aria-hidden="true"></div>
 </footer>

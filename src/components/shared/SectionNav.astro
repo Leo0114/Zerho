@@ -2,32 +2,22 @@
 import { SECTIONS } from "@/data/site";
 
 /**
- * Navegación por secciones. El sitio es una sola página larga por residencia,
- * así que esto no lleva a ningún sitio nuevo: dice dónde estás.
- *
- * Se monta dos veces —en línea dentro de la cabecera en escritorio, flotando
- * al pie en móvil— y un único script gobierna ambas instancias.
+ * Navegación por secciones (escritorio). El sitio es una sola página larga por
+ * residencia, así que esto no lleva a ningún sitio nuevo: dice dónde estás.
+ * El scroll-spy y el indicador los gobierna el script de `SiteHeader`.
  */
 interface Props {
-  variant?: "inline" | "floating";
   class?: string;
 }
 
-const { variant = "inline", class: className = "" } = Astro.props;
-const isFloating = variant === "floating";
+const { class: className = "" } = Astro.props;
 ---
 
 <nav
   data-section-nav
   data-indicator-root
   aria-label="Secciones de la residencia"
-  class:list={[
-    "relative flex items-center",
-    isFloating
-      ? "gap-0.5 overflow-x-auto rounded-full p-1 text-ink [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      : "gap-0.5",
-    className,
-  ]}
+  class:list={["relative flex items-center gap-0.5", className]}
 >
   {/* La pastilla vive detrás de las etiquetas y toma su color del contexto,
       así la misma navegación funciona sobre foto oscura y sobre lienzo. */}

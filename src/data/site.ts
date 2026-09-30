@@ -11,26 +11,34 @@ export const SITE = {
   slogan: "Arquitectura Extraordinaria",
   legalName: "Zerho Arquitectos",
   description:
-    "Residencias de autor en San Pedro Garza García y Monterrey, con certeza total de costos, aportaciones programadas y diez años de garantía.",
+    "Residencias de autor en San Pedro Garza García, con certeza total de costos, aportaciones programadas y diez años de garantía.",
   director: "Jorge Antonio López",
   directorRole: "Dirección de proyecto",
-  // TODO(cliente): sustituir por los datos de contacto reales de Zerho.
-  email: "contacto@zerho.mx",
-  phone: "+52 81 1234 5678",
-  phoneHref: "+528112345678",
-  whatsapp: "528112345678",
+  /** Firma de marca: cierra el pie de todas las fichas. */
+  signature: "Construimos su legado, ustedes las historias",
+  /** Persona que atiende las visitas; da nombre y rostro al contacto. */
+  contactPerson: "Arq. Ana Treviño Gaona",
+  email: "atrevino@arquitectosasociados.mx",
+  phone: "+52 (81) 1965 8330",
+  phoneHref: "+528119658330",
+  whatsapp: "528119658330",
   city: "San Pedro Garza García, Nuevo León",
   instagram: "https://www.instagram.com/",
 } as const;
 
-/** Navegación del sitio: es una sola página larga por propiedad. */
+/**
+ * Navegación del sitio: es una sola página larga por propiedad.
+ *
+ * El orden sigue la decisión del comprador: qué es la casa, quién la respalda,
+ * cómo se ve, cómo se vive y, al final, el detalle para comparar.
+ */
 export const SECTIONS = [
   { id: "residencia", label: "Residencia" },
-  { id: "caracteristicas", label: "Características" },
+  { id: "compromiso", label: "Compromiso" },
   { id: "galeria", label: "Galería" },
   { id: "planos", label: "Planos" },
-  { id: "compromiso", label: "Compromiso" },
-  { id: "contacto", label: "Contacto" },
+  { id: "caracteristicas", label: "Características" },
+  { id: "contacto", label: "Visita" },
 ] as const;
 
 export type SectionId = (typeof SECTIONS)[number]["id"];
@@ -69,21 +77,43 @@ export const WARRANTY = {
 export const PROMISE = {
   eyebrow: "Nuestro compromiso",
   title: "Tu hogar es el activo más importante de tu patrimonio",
+  lead: "Y el espacio donde tu familia construirá sus mejores recuerdos. Por eso trabajamos así:",
   body: "Entendemos que es también el espacio donde tu familia construirá sus mejores recuerdos. Por eso ofrecemos residencias en preventa exclusiva respaldadas por una absoluta certeza constructiva y financiera, acompañándote paso a paso para garantizar que el resultado final sea, sin excepciones, la casa que siempre soñaste.",
 } as const;
 
-/** Enlace de WhatsApp prellenado con la propiedad que se está viendo. */
-export function whatsappHref(propertyTitle?: string) {
-  const text = propertyTitle
-    ? `Hola Zerho, me interesa la residencia ${propertyTitle}. ¿Podemos agendar un recorrido?`
-    : `Hola Zerho, me gustaría conocer sus residencias disponibles.`;
+/**
+ * Interiorismo. Los renders muestran casas amuebladas y ambientadas: quien se
+ * enamora de un interior debe saber que también lo podemos hacer realidad.
+ */
+export const INTERIORS = {
+  eyebrow: "Interiorismo",
+  title: "Lo que ves también lo diseñamos",
+  lead: "Cada ambiente de estas imágenes nace del mismo estudio que proyecta la casa.",
+  body: [
+    "Mobiliario, materiales, iluminación y carpintería se piensan junto con la arquitectura, no después. Por eso los espacios se sienten completos desde el primer día.",
+    "Si te gusta la atmósfera que ves, podemos llevarla a tu residencia: a la medida de tu familia, de tus piezas y de tu forma de vivir.",
+  ],
+  cta: "Conversemos sobre tus interiores",
+} as const;
+
+type WhatsappTopic = "visita" | "interiores";
+
+/** Enlace de WhatsApp prellenado con la propiedad y el motivo. */
+export function whatsappHref(
+  propertyTitle?: string,
+  topic: WhatsappTopic = "visita",
+) {
+  const text =
+    topic === "interiores"
+      ? `Hola Zerho, me gustaría platicar sobre el interiorismo${propertyTitle ? ` de ${propertyTitle}` : ""}.`
+      : propertyTitle
+        ? `Hola Zerho, me gustaría agendar una visita a ${propertyTitle}.`
+        : `Hola Zerho, me gustaría conocer sus residencias disponibles.`;
   return `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 
-/** Asunto prellenado para el correo de contacto. */
+/** Asunto prellenado para el correo. */
 export function mailHref(propertyTitle?: string) {
-  const subject = propertyTitle
-    ? `Interés en ${propertyTitle}`
-    : `Contacto desde zerho.mx`;
+  const subject = propertyTitle ? `${propertyTitle} — Zerho` : `Residencias Zerho`;
   return `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
 }

@@ -1,18 +1,25 @@
 ---
+import { Image } from "astro:assets";
 import { SITE } from "@/data/site";
 import { getProperties, propertyHref } from "@/lib/properties";
 import Icon from "@/components/ui/Icon.astro";
 import SectionNav from "./SectionNav.astro";
+import firstLogo from "@/assets/firstLogo.png";
+import scrollLogo from "@/assets/scrollLogo.png";
 
 /**
  * No es una barra de navegación al uso: no hay más páginas que las fichas.
  * Es la identidad del estudio, el índice de la residencia que estás leyendo y
  * el acceso a las otras dos.
  *
- * Sobre el hero se comporta como cristal transparente con texto claro; en
- * cuanto el hero deja de tocarla se materializa en un cristal esmerilado con
- * texto tinta. El cambio lo dispara un centinela colocado al final del hero,
- * no un umbral de píxeles: así sigue siendo correcto si el hero cambia de alto.
+ * Sobre el hero se comporta como cristal transparente: el logotipo claro
+ * preside centrado y el índice se retira. En cuanto el hero deja de tocarla,
+ * se materializa en cristal esmerilado, el logotipo se desliza a su sitio y
+ * cambia a su versión en color, y aparece el índice. El cambio lo dispara un
+ * centinela colocado al final del hero, no un umbral de píxeles.
+ *
+ * En móvil no hay índice de secciones: la ficha se recorre con el pulgar y la
+ * única acción fija es agendar la visita (`StickyVisit`).
  */
 interface Props {
   /** Slug de la residencia que se está viendo, para marcarla en el menú. */
@@ -23,6 +30,18 @@ interface Props {
 
 const { currentId, showSections = true } = Astro.props;
 const properties = await getProperties();
+
+// Los PNG de marca son cuadrados con mucho aire; la caja apaisada (3:1) y
+// `object-cover` recortan ese aire sin tocar el archivo original.
+const LOGO_IMAGE = {
+  // `width` fija también el `src` de respaldo: sin él se serviría el PNG de 8K.
+  width: 480,
+  height: 480,
+  widths: [240, 480],
+  sizes: "(min-width: 1024px) 160px, 140px",
+  loading: "eager",
+  class: "h-full w-full object-cover",
+} as const;
 ---
 
 <header
@@ -40,46 +59,30 @@ const properties = await getProperties();
     <!-- Marca -->
     <a
       href="/"
-      class="press-soft group flex shrink-0 items-center gap-3"
+      class="brand relative block shrink-0"
       aria-label={`${SITE.name} — ${SITE.slogan}`}
     >
-      <!-- Monograma provisional hasta que exista el logotipo definitivo:
-           mismo peso visual que una marca real, sin fingir una. -->
-      <span
-        class="mark grid h-10 w-10 place-items-center rounded-[0.7rem] text-[1.05rem] leading-none"
-        aria-hidden="true"
-      >
-        <span class="font-[family-name:var(--font-display)] tracking-[-0.04em]"
-          >Z</span
-        >
+      <span class="brand-logo brand-logo--hero" aria-hidden="true">
+        <Image src={firstLogo} alt="" {...LOGO_IMAGE} />
       </span>
-
-      <span class="flex flex-col gap-1">
-        <span
-          class="text-[1.05rem] font-semibold uppercase leading-none tracking-[0.3em]"
-        >
-          {SITE.name}
-        </span>
-        <span
-          class="hidden text-[0.55rem] font-medium uppercase leading-none tracking-[0.28em] opacity-55 sm:block"
-        >
-          {SITE.slogan}
-        </span>
+      <span class="brand-logo brand-logo--solid" aria-hidden="true">
+        <Image src={scrollLogo} alt="" {...LOGO_IMAGE} />
       </span>
     </a>
 
     <!-- Índice de la residencia (escritorio) -->
-    {showSections && <SectionNav class="mx-auto hidden lg:flex" />}
+    {showSections && <SectionNav class="section-index mx-auto hidden lg:flex" />}
 
     <!-- Las otras residencias -->
     <details data-residences class="relative ml-auto shrink-0 lg:ml-0">
       <summary
-        class="press-soft flex cursor-pointer list-none items-center gap-2 rounded-full border border-current/20 px-3.5 py-2 text-[0.7rem] font-semibold uppercase leading-none tracking-[0.14em] transition-colors duration-300 hover:border-current/45 [&::-webkit-details-marker]:hidden"
+        aria-label="Residencias"
+        class="press-soft flex h-10 min-w-10 cursor-pointer list-none items-center justify-center gap-2 rounded-full border border-current/20 px-2.5 text-[0.7rem] font-semibold uppercase leading-none tracking-[0.14em] transition-colors duration-300 hover:border-current/45 sm:px-3.5 [&::-webkit-details-marker]:hidden"
       >
-        Residencias
+        <span class="hidden sm:inline">Residencias</span>
         <Icon
           name="chevron-down"
-          class="h-3.5 w-3.5 transition-transform duration-300 ease-[var(--ease-out-expo)] group-open:rotate-180"
+          class="h-3.5 w-3.5 transition-transform duration-300 ease-[var(--ease-out-expo)]"
           strokeWidth={2}
         />
       </summary>
@@ -89,6 +92,7 @@ const properties = await getProperties();
       <div
         class="residences-panel absolute right-0 top-[calc(100%+0.75rem)] w-[min(20rem,calc(100vw-2.5rem))] origin-top-right overflow-hidden rounded-[1.25rem] border border-line bg-panel text-ink shadow-e3"
       >
+        <p class="type-eyebrow px-5 pb-1 pt-4 text-muted">Otras oportunidades</p>
         <ul class="p-1.5">
           {
             properties.map((property) => {
@@ -129,19 +133,6 @@ const properties = await getProperties();
   </div>
 </header>
 
-{
-  /* Índice de la residencia (móvil): barra flotante al alcance del pulgar,
-     no un menú escondido tras una hamburguesa. */
-  showSections && (
-    <div class="fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
-      <SectionNav
-        variant="floating"
-        class="material-chrome mx-auto max-w-full border border-line/70 shadow-e2"
-      />
-    </div>
-  )
-}
-
 <style>
   /* --- Estados del cristal ------------------------------------------------- */
   .chrome {
@@ -162,25 +153,86 @@ const properties = await getProperties();
     opacity: 0;
   }
 
-  /* --- Monograma ------------------------------------------------------------ */
-  .mark {
-    background-color: var(--color-primary);
-    color: var(--color-bone);
-    box-shadow: inset 0 0 0 1px rgb(233 225 209 / 0.16);
+  /* --- Marca -------------------------------------------------------------
+     La cabecera es contenedor de consulta: `100cqw` es su ancho real (sin la
+     barra de scroll), así el centrado se resuelve en CSS, sin medir en JS
+     ni parpadear en el primer pintado. Las variables replican el ritmo de
+     `.container-x`.                                                        */
+  .chrome {
+    container-type: inline-size;
+    --pad: 1.25rem;
+    --brand-w: 7.5rem;
+    --brand-hero-scale: 1.2;
+  }
+
+  @media (min-width: 640px) {
+    .chrome {
+      --pad: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .chrome {
+      --brand-w: 9rem;
+      --brand-hero-scale: 1.3;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .chrome {
+      --pad: 3rem;
+    }
+  }
+
+  .brand {
+    width: var(--brand-w);
+    aspect-ratio: 3 / 1;
+    transform-origin: center;
+    transition: transform 700ms var(--ease-out-quint);
+  }
+
+  /* Arriba: centrada y algo mayor. Al hacer scroll vuelve a su sitio. */
+  .chrome[data-chrome="hero"] .brand {
+    transform: translate3d(
+        calc(min(100cqw, 84rem) / 2 - var(--pad) - var(--brand-w) / 2),
+        0,
+        0
+      )
+      scale(var(--brand-hero-scale));
+  }
+
+  .brand:active {
+    opacity: 0.8;
+  }
+
+  .brand-logo {
+    position: absolute;
+    inset: 0;
+    transition: opacity 500ms var(--ease-out-quint);
+  }
+
+  .brand-logo--hero,
+  .chrome[data-chrome="hero"] .brand-logo--solid {
+    opacity: 0;
+  }
+
+  .chrome[data-chrome="hero"] .brand-logo--hero {
+    opacity: 1;
+  }
+
+  /* --- Índice: se retira mientras el logotipo preside el hero ------------- */
+  .chrome :global(.section-index) {
     transition:
-      background-color 400ms var(--ease-out-expo),
-      transform 200ms var(--ease-out-expo);
+      opacity 500ms var(--ease-out-quint),
+      visibility 0s;
   }
 
-  .chrome[data-chrome="hero"] .mark {
-    background-color: rgb(255 255 255 / 0.14);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: #fff;
-  }
-
-  .group:active .mark {
-    transform: scale(0.94);
+  .chrome[data-chrome="hero"] :global(.section-index) {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 300ms var(--ease-out-quint),
+      visibility 0s linear 300ms;
   }
 
   /* --- Panel de residencias -------------------------------------------------
@@ -212,6 +264,11 @@ const properties = await getProperties();
       transform: none;
       filter: none;
       transition: opacity 160ms linear;
+    }
+
+    /* Sin desplazamiento: el logotipo aparece ya en su sitio. */
+    .chrome[data-chrome="hero"] .brand {
+      transform: none;
     }
   }
 </style>

@@ -7,7 +7,8 @@ import { galleryId, getGalleryImages } from "@/lib/gallery";
  * Galería en mosaico con visor a pantalla completa.
  *
  * Las imágenes se descubren en build desde `src/assets/<dir>/`: añadir una foto
- * a la carpeta la publica, sin tocar el .md ni este componente.
+ * a la carpeta la publica, sin tocar el .md ni este componente. El visor vive
+ * en `@/scripts/lightbox`, compartido con los planos.
  */
 interface Props {
   /** Ruta bajo `src/assets/`, p. ej. `images/gal/prueba`. */
@@ -70,6 +71,7 @@ const MOSAIC_SPANS = [
             data-pswp-width={src.width}
             data-pswp-height={src.height}
             data-pswp-caption={caption}
+            data-cropped="true"
             target="_blank"
             rel="noreferrer"
             aria-label={`Ampliar: ${caption}`}
@@ -110,54 +112,5 @@ const MOSAIC_SPANS = [
 }
 
 <script>
-  import PhotoSwipeLightbox from "photoswipe/lightbox";
-  import "photoswipe/style.css";
-
-  let lightboxes: PhotoSwipeLightbox[] = [];
-
-  function destroyGalleries() {
-    lightboxes.forEach((lb) => lb.destroy());
-    lightboxes = [];
-  }
-
-  function initGalleries() {
-    destroyGalleries();
-
-    document
-      .querySelectorAll<HTMLElement>("[data-pswp-gallery]")
-      .forEach((el) => {
-        const lb = new PhotoSwipeLightbox({
-          gallery: `#${el.id}`,
-          children: "a",
-          bgOpacity: 0.94,
-          // Zoom desde la miniatura: la foto crece desde donde estaba, no
-          // aparece de la nada en el centro de la pantalla.
-          showHideAnimationType: "zoom",
-          pswpModule: () => import("photoswipe"),
-        });
-
-        lb.on("uiRegister", () => {
-          lb.pswp?.ui?.registerElement({
-            name: "caption",
-            order: 9,
-            isButton: false,
-            appendTo: "root",
-            html: "",
-            onInit: (element, pswp) => {
-              element.classList.add("pswp-caption");
-              pswp.on("change", () => {
-                element.textContent =
-                  pswp.currSlide?.data.element?.dataset.pswpCaption ?? "";
-              });
-            },
-          });
-        });
-
-        lb.init();
-        lightboxes.push(lb);
-      });
-  }
-
-  document.addEventListener("astro:page-load", initGalleries);
-  document.addEventListener("astro:before-swap", destroyGalleries);
+  import "@/scripts/lightbox";
 </script>

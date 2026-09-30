@@ -1,8 +1,9 @@
 ---
 # NOTA: ficha de demostración. Datos comerciales pendientes de confirmar con
-# el cliente antes de publicar.
-title: Sierra Alta 24
-location: Zona Carretera Nacional, Monterrey, Nuevo León
+# el cliente antes de publicar; por ahora sólo son reales el nombre y las
+# imágenes.
+title: Encinos 11
+location: San Pedro Garza García, Nuevo León
 status: En desarrollo
 price: 38500000
 currency: MXN
@@ -10,12 +11,12 @@ featured: false
 order: 3
 available: true
 
-excerpt: Una residencia de dos niveles abierta a la Sierra Madre, con doble altura en el área social, terraza panorámica y el mismo estándar constructivo de toda la obra de Zerho.
+excerpt: Una residencia de dos niveles en San Pedro Garza García, con doble altura en el área social, terraza panorámica y el mismo estándar constructivo de toda la obra de Zerho.
 
-cover: ../../assets/images/casa3.jpg
-coverAlt: Vista de la residencia Sierra Alta 24 hacia la Sierra Madre
+cover: ../../assets/images/encinos11/one.png
+coverAlt: Fachada de la residencia Encinos 11
 
-galleryDir: images/gal/prueba
+galleryDir: images/encinos11
 
 highlights:
   - label: Terreno
@@ -27,10 +28,22 @@ highlights:
   - label: Cochera
     value: 3 autos
 
+amenities:
+  - label: Área social a doble altura
+    icon: height
+  - label: Terraza panorámica
+    value: 46.80 m²
+    icon: sofa
+  - label: Jardín plano
+    value: 128.60 m²
+    icon: tree
+  - label: Recámara principal en planta baja
+    icon: bed
+
 specs:
   - label: Ubicación
-    value: Fraccionamiento privado, Zona Carretera Nacional
-    note: Acceso controlado las 24 horas
+    value: San Pedro Garza García
+    note: Fraccionamiento privado con acceso controlado
     icon: map-pin
   - label: Frente
     value: 15.40 m
@@ -51,7 +64,7 @@ specs:
     icon: bath
   - label: Terraza panorámica
     value: 46.80 m²
-    note: Orientada a la Sierra Madre
+    note: Abierta al área social
     icon: tree
   - label: Jardín posterior
     value: 128.60 m²
@@ -61,14 +74,6 @@ specs:
     value: 3 vehículos
     note: Techada
     icon: car
-
-features:
-  - Fraccionamiento privado con acceso controlado en la Zona Carretera Nacional, con 15.40 m de frente.
-  - 612.40 m² de terreno y 498.25 m² de construcción resuelta en dos niveles.
-  - Cuatro recámaras, con la principal en planta baja, baño completo y vestidor.
-  - Doble altura en el área social, abierta hacia la terraza panorámica de 46.80 m².
-  - Jardín posterior de 128.60 m², plano y 100% aprovechable.
-  - Cochera techada con espacio para tres vehículos.
 
 construction:
   - group: Envolvente y confort
@@ -103,17 +108,18 @@ plans:
     caption: Área social a doble altura, recámara principal y terraza panorámica.
     image: ../../assets/images/gal/prueba/lydia-mailloux-Ex9TEVXTrPw-unsplash.jpg
   - label: Planta alta
-    caption: Tres recámaras secundarias y sala familiar con vista a la sierra.
+    caption: Tres recámaras secundarias y sala familiar.
     image: ../../assets/images/gal/prueba/mehran-arjmand-yN79VOWWYKM-unsplash.jpg
 
 seo:
-  title: Sierra Alta 24 — Residencia en desarrollo en Monterrey
-  description: Residencia de 498 m² sobre 612 m² de terreno en la Zona Carretera Nacional, con doble altura, terraza panorámica y garantía de diez años.
+  title: Encinos 11 — Residencia en desarrollo en San Pedro Garza García
+  description: Residencia de 498 m² sobre 612 m² de terreno en San Pedro Garza García, con doble altura, terraza panorámica y garantía de diez años.
 ---
 
-## Abierta a la sierra
+## Luz de mañana, vida en un nivel
 
-Sierra Alta 24 ordena la casa alrededor de una doble altura que mira al oriente:
+Encinos 11 ordena la casa alrededor de una doble altura que mira al oriente, en
+una de las zonas más exclusivas de San Pedro Garza García:
 el área social recibe luz toda la mañana y se prolonga sin interrupciones hacia
 la terraza panorámica.
 

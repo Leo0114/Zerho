@@ -95,6 +95,11 @@
     }
   }
 
+  /* Con un modal abierto la ficha no se desplaza por debajo. */
+  html.modal-open {
+    overflow: hidden;
+  }
+
   body {
     margin: 0;
     background-color: var(--color-canvas);

@@ -58,6 +58,29 @@ export function propertyHref(property: Property) {
   return property.data.featured ? "/" : `/${property.id}`;
 }
 
+/**
+ * Entrada editorial de una ficha: el primer `##` y el primer párrafo de prosa
+ * del cuerpo .md. Es lo que se lee en la página; el texto completo se abre
+ * bajo demanda. Se extrae del Markdown para que el .md siga siendo la única
+ * fuente y no haya que duplicar el resumen en el frontmatter.
+ */
+export function getLead(property: Property) {
+  const blocks = (property.body ?? "")
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  const heading = blocks
+    .find((block) => block.startsWith("## "))
+    ?.replace(/^##\s+/, "");
+
+  const lead = blocks
+    .find((block) => !/^(#|>|[-*] |\d+\. )/.test(block))
+    ?.replace(/\s*\n\s*/g, " ");
+
+  return { heading, lead };
+}
+
 const CURRENCY_FORMATTERS = new Map<string, Intl.NumberFormat>();
 
 /** `67000000` → `$67,000,000 MXN`. Sin decimales: son cifras redondas. */

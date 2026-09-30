@@ -62,8 +62,19 @@ const propiedades = defineCollection({
         )
         .default([]),
 
-      /** Viñetas de características principales, en prosa corta. */
-      features: z.array(z.string()).default([]),
+      /**
+       * Lo que distingue a la casa y atrae la visita: alberca, jacuzzi,
+       * terrazas, salas de juego… Se muestra como fichas breves con icono.
+       */
+      amenities: z
+        .array(
+          z.object({
+            label: z.string(),
+            value: z.string().optional(),
+            icon: z.string().optional(),
+          }),
+        )
+        .default([]),
 
       /** Especificación constructiva agrupada por familia. */
       construction: z
@@ -81,6 +92,14 @@ const propiedades = defineCollection({
           z.object({
             label: z.string(),
             caption: z.string().optional(),
+            /** Superficie de la planta, p. ej. "252.08 m²". */
+            area: z.string().optional(),
+            /** Programa arquitectónico: se consulta bajo demanda. */
+            spaces: z
+              .array(
+                z.object({ name: z.string(), area: z.string().optional() }),
+              )
+              .default([]),
             image: image(),
           }),
         )

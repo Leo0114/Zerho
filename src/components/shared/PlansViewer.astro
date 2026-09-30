@@ -1,18 +1,28 @@
 ---
 import { Image } from "astro:assets";
 import Icon from "@/components/ui/Icon.astro";
+import Modal from "@/components/ui/Modal.astro";
+import ModalTrigger from "@/components/ui/ModalTrigger.astro";
 
 /**
  * Visor de plantas arquitectónicas.
  *
  * Las láminas no se montan y desmontan al cambiar de pestaña: conviven apiladas
- * y se funden entre sí. Así el alto del bloque no salta, el visor a pantalla
- * completa conserva las medidas de todas las láminas para animar el zoom desde
- * su posición real, y el cambio se siente instantáneo porque no hay carga.
+ * y se funden entre sí. Así el alto del bloque no salta y el cambio se siente
+ * instantáneo porque no hay carga.
+ *
+ * Al ampliar una lámina se abre un solo recorrido con todas las plantas; lo que
+ * se navegue a pantalla completa mueve también la pestaña activa, de modo que
+ * al cerrar se vuelve a la planta que se estaba viendo.
+ *
+ * La caja tiene un alto máximo en escritorio para que la lámina completa, sus
+ * pestañas y su leyenda quepan en una pantalla de portátil (≈ 1280×800).
  */
 interface Plan {
   label: string;
   caption?: string;
+  area?: string;
+  spaces?: readonly { name: string; area?: string }[];
   image: ImageMetadata;
 }
 
@@ -26,48 +36,61 @@ interface Props {
 const { plans, subject, class: className = "" } = Astro.props;
 
 const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
+const programId = `${viewerId}-programa`;
+const hasProgram = plans.some((plan) => plan.spaces?.length);
 ---
 
 {
   plans.length > 0 && (
     <div class:list={["reveal", className]}>
-      {/* Control segmentado: una sola línea, el indicador viaja con muelle */}
-      {plans.length > 1 && (
-        <div
-          data-indicator-root
-          role="tablist"
-          aria-label={`Plantas de ${subject}`}
-          class="relative mb-7 inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-line bg-panel p-1 text-ink [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <span
-            data-indicator
-            aria-hidden="true"
-            class="pointer-events-none absolute left-0 top-1/2 h-9 -translate-y-1/2 rounded-full bg-ink opacity-0"
-            style="transition: opacity 300ms var(--ease-out-expo);"
-          />
-          {plans.map((plan, i) => (
-            <button
-              type="button"
-              role="tab"
-              data-indicator-item
-              data-plan-tab={i}
-              data-active={i === 0 ? "" : undefined}
-              aria-selected={i === 0 ? "true" : "false"}
-              aria-controls={`${viewerId}-panel-${i}`}
-              class="relative z-10 shrink-0 cursor-pointer rounded-full px-4 py-2.5 text-[0.7rem] font-semibold uppercase leading-none tracking-[0.14em] text-ink opacity-55 transition-[opacity,color] duration-300 ease-[var(--ease-out-expo)] hover:opacity-90 data-[active]:text-canvas data-[active]:opacity-100"
-            >
-              {plan.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        {/* Control segmentado: una sola línea, el indicador se desliza */}
+        {plans.length > 1 ? (
+          <div
+            data-indicator-root
+            role="tablist"
+            aria-label={`Plantas de ${subject}`}
+            class="relative inline-flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-line bg-panel p-1 text-ink [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <span
+              data-indicator
+              aria-hidden="true"
+              class="pointer-events-none absolute left-0 top-1/2 h-9 -translate-y-1/2 rounded-full bg-ink opacity-0"
+              style="transition: opacity 300ms var(--ease-out-expo);"
+            />
+            {plans.map((plan, i) => (
+              <button
+                type="button"
+                role="tab"
+                data-indicator-item
+                data-plan-tab={i}
+                data-active={i === 0 ? "" : undefined}
+                aria-selected={i === 0 ? "true" : "false"}
+                aria-controls={`${viewerId}-panel-${i}`}
+                class="relative z-10 shrink-0 cursor-pointer rounded-full px-4 py-2.5 text-[0.7rem] font-semibold uppercase leading-none tracking-[0.14em] text-ink opacity-55 transition-[opacity,color] duration-300 ease-[var(--ease-out-expo)] hover:opacity-90 data-[active]:text-canvas data-[active]:opacity-100"
+              >
+                {plan.label}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p class="type-label text-ink">{plans[0]!.label}</p>
+        )}
+
+        {hasProgram && (
+          <ModalTrigger target={programId} variant="link">
+            Programa arquitectónico
+          </ModalTrigger>
+        )}
+      </div>
 
       {/* Las láminas comparten una sola caja: el bloque no cambia de alto */}
       <div
         id={`${viewerId}-stack`}
         data-pswp-gallery
+        data-pswp-animation="fade"
         data-plans-stack
-        class="relative aspect-[4/3] w-full overflow-hidden rounded-frame border border-line bg-panel sm:aspect-[16/10]"
+        class="relative aspect-[4/3] w-full overflow-hidden rounded-frame border border-line bg-panel sm:aspect-[16/10] lg:aspect-auto lg:h-[min(58svh,34rem)]"
       >
         {plans.map((plan, i) => {
           const caption = `${subject} — ${plan.label}`;
@@ -84,53 +107,98 @@ const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
               target="_blank"
               rel="noreferrer"
               aria-label={`Ampliar ${caption}`}
-              class="plan-panel press-soft group absolute inset-0 block focus-visible:outline-offset-4"
+              class="plan-panel group absolute inset-0 block focus-visible:outline-offset-4"
             >
+              {/* `contain`, nunca `cover`: una planta recortada no sirve
+                  para decidir. */}
               <Image
                 src={plan.image}
                 alt={caption}
                 widths={[640, 1200, 1800]}
                 sizes="(min-width: 1024px) 70vw, 92vw"
                 loading={i === 0 ? "eager" : "lazy"}
-                class="h-full w-full object-cover"
+                class="h-full w-full object-contain"
               />
 
               <span
-                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-black/70 via-transparent to-transparent"
+                class="pointer-events-none absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-line bg-panel/85 text-ink shadow-e1 backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-105 sm:right-5 sm:top-5"
                 aria-hidden="true"
-              />
-
-              <span class="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-5 p-5 sm:p-7">
-                <span class="max-w-lg">
-                  <span class="type-label block text-accent-light">
-                    {plan.label}
-                  </span>
-                  {plan.caption && (
-                    <span class="mt-2.5 block text-[0.9rem] leading-relaxed text-white/80">
-                      {plan.caption}
-                    </span>
-                  )}
-                </span>
-
-                <span
-                  class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/25 bg-white/15 text-white backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-105"
-                  aria-hidden="true"
-                >
-                  <Icon name="maximize" class="h-4 w-4" strokeWidth={1.9} />
-                </span>
+              >
+                <Icon name="maximize" class="h-4 w-4" strokeWidth={1.9} />
               </span>
             </a>
           );
         })}
       </div>
+
+      {/* Leyenda bajo la lámina, apilada igual que ellas para no saltar */}
+      <div class="mt-5 grid">
+        {plans.map((plan, i) => (
+          <p
+            data-plan-caption={i}
+            data-active={i === 0 ? "" : undefined}
+            class="plan-caption flex flex-wrap items-baseline gap-x-4 gap-y-1 [grid-area:1/1]"
+          >
+            {plan.area && (
+              <span class="type-label tabular-nums text-accent-deep">
+                {plan.area}
+              </span>
+            )}
+            {plan.caption && (
+              <span class="text-[0.95rem] leading-relaxed text-muted">
+                {plan.caption}
+              </span>
+            )}
+          </p>
+        ))}
+      </div>
+
+      {hasProgram && (
+        <Modal
+          id={programId}
+          eyebrow="Planos"
+          title={`Programa de ${subject}`}
+          size="lg"
+        >
+          <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+            {plans
+              .filter((plan) => plan.spaces?.length)
+              .map((plan) => (
+                <section>
+                  <h3 class="flex items-baseline justify-between gap-3 border-b border-line pb-3">
+                    <span class="type-label text-ink">{plan.label}</span>
+                    {plan.area && (
+                      <span class="text-[0.85rem] tabular-nums text-muted">
+                        {plan.area}
+                      </span>
+                    )}
+                  </h3>
+                  <ul class="mt-2">
+                    {plan.spaces!.map((space) => (
+                      <li class="flex items-baseline justify-between gap-4 border-b border-line/60 py-2.5 text-[0.9rem] leading-snug">
+                        <span class="text-ink">{space.name}</span>
+                        {space.area && (
+                          <span class="shrink-0 tabular-nums text-muted">
+                            {space.area}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
 
 <style>
-  /* Fundido cruzado entre láminas. `visibility` en lugar de `display` para que
-     las inactivas conserven medidas: el visor las necesita para el zoom. */
-  .plan-panel {
+  /* Fundido cruzado entre láminas y leyendas. `visibility` en lugar de
+     `display` para que las inactivas conserven medidas. */
+  .plan-panel,
+  .plan-caption {
     opacity: 0;
     visibility: hidden;
     transition:
@@ -138,7 +206,8 @@ const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
       visibility 0s linear 420ms;
   }
 
-  .plan-panel[data-active] {
+  .plan-panel[data-active],
+  .plan-caption[data-active] {
     opacity: 1;
     visibility: visible;
     transition:
@@ -148,6 +217,8 @@ const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
 </style>
 
 <script>
+  import "@/scripts/lightbox";
+  import type { LightboxChangeDetail } from "@/scripts/lightbox";
   import { mountAllIndicators } from "@/scripts/indicator";
 
   let cleanup: (() => void) | null = null;
@@ -163,12 +234,14 @@ const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
     const listeners: Array<() => void> = [];
 
     for (const stack of roots) {
-      const section = stack.closest("section") ?? document;
+      const scope = stack.parentElement ?? document;
       const tabs = Array.from(
-        section.querySelectorAll<HTMLButtonElement>("[data-plan-tab]"),
+        scope.querySelectorAll<HTMLButtonElement>("[data-plan-tab]"),
       );
-      const panels = Array.from(
-        stack.querySelectorAll<HTMLElement>("[data-plan-panel]"),
+      const layers = Array.from(
+        scope.querySelectorAll<HTMLElement>(
+          "[data-plan-panel], [data-plan-caption]",
+        ),
       );
 
       const select = (index: number) => {
@@ -176,13 +249,14 @@ const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
           tab.toggleAttribute("data-active", i === index);
           tab.setAttribute("aria-selected", String(i === index));
         });
-        panels.forEach((panel, i) =>
-          panel.toggleAttribute("data-active", i === index),
-        );
+        for (const layer of layers) {
+          const i = Number(layer.dataset.planPanel ?? layer.dataset.planCaption);
+          layer.toggleAttribute("data-active", i === index);
+        }
       };
 
       tabs.forEach((tab, i) => {
-        // En pointerdown, no en click: el indicador sale en cuanto se toca.
+        // En pointerdown, no en click: la lámina cambia en cuanto se toca.
         const onPointerDown = () => select(i);
         const onKeyDown = (event: KeyboardEvent) => {
           const delta =
@@ -201,6 +275,14 @@ const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
           tab.removeEventListener("keydown", onKeyDown);
         });
       });
+
+      // Lo que se recorre a pantalla completa mueve también la pestaña.
+      const onLightboxChange = (event: Event) =>
+        select((event as CustomEvent<LightboxChangeDetail>).detail.index);
+      stack.addEventListener("lightbox:change", onLightboxChange);
+      listeners.push(() =>
+        stack.removeEventListener("lightbox:change", onLightboxChange),
+      );
     }
 
     const unmountIndicators = mountAllIndicators(
