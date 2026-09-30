@@ -1,0 +1,665 @@
+---
+/**
+ * Modal con cinco pestañas para el detalle completo de una residencia.
+ *
+ * Orden de tabs:
+ *  1. Residencia  (book)   — narrativa editorial + fraccionamiento
+ *  2. Áreas       (tree)   — sociales/exteriores primero, privadas después
+ *  3. Especificaciones (layers) — ficha técnica / specs sheet
+ *  4. Constructiva (ruler) — especificación constructiva por grupo
+ *  5. Precio      (tag)    — precio alzado, anticipo, saldo, plazo, garantía
+ */
+import type { CollectionEntry } from "astro:content";
+import { formatPrice } from "@/lib/properties";
+import AmenityList from "@/components/shared/AmenityList.astro";
+import SpecSheet from "@/components/shared/SpecSheet.astro";
+import ConstructionSpec from "@/components/shared/ConstructionSpec.astro";
+import Icon from "@/components/ui/Icon.astro";
+import Button from "@/components/ui/Button.astro";
+import { whatsappHref } from "@/data/site";
+
+interface Props {
+  id: string;
+  property: CollectionEntry<"propiedades">;
+  Content: unknown;
+}
+
+const { id, property, Content } = Astro.props;
+const { data } = property;
+
+const titleId   = `${id}-title`;
+const tabPrefix   = `${id}-tab`;
+const panelPrefix = `${id}-panel`;
+
+/** Tab definitions — order matches the UX spec */
+const TABS = [
+  { key: "residencia",  label: "Residencia",       icon: "book"   },
+  { key: "areas",       label: "Áreas",             icon: "tree"   },
+  { key: "specs",       label: "Especificaciones",  icon: "layers" },
+  { key: "constructiva",label: "Constructiva",      icon: "ruler"  },
+  { key: "precio",      label: "Precio",            icon: "tag"    },
+] as const;
+
+const hasFinancing    = !!data.financing;
+const hasFractionment = !!data.fractionment;
+
+/** Áreas Privadas: recámaras, baños, vestidores */
+const privateAreas = data.specs.filter((s) =>
+  ["recámaras", "baños", "vestidor", "recámara"].some((k) =>
+    s.label.toLowerCase().includes(k),
+  ),
+);
+---
+
+<dialog id={id} data-modal aria-labelledby={titleId} class="prop-modal">
+  <div class="prop-modal-panel">
+
+    <!-- ── Header ──────────────────────────────────────────────── -->
+    <header class="prop-modal-header">
+      <div class="prop-modal-meta">
+        <p class="type-eyebrow flex items-center gap-3 text-accent-deep">
+          <span class="h-px w-6 bg-accent/45" aria-hidden="true" />
+          La residencia
+        </p>
+        <h2 id={titleId} class="prop-modal-title mt-4 text-ink">{data.title}</h2>
+      </div>
+      <button type="button" data-modal-close aria-label="Cerrar" class="prop-modal-close">
+        <Icon name="x" class="h-4 w-4" strokeWidth={2} />
+      </button>
+    </header>
+
+    <!-- ── Tab nav ─────────────────────────────────────────────── -->
+    <nav class="prop-modal-tabs-nav" aria-label="Secciones de la residencia">
+      <div role="tablist" class="prop-tabs" data-tabs={id}>
+        {TABS.map(({ key, label, icon }, i) => (
+          <button
+            id={`${tabPrefix}-${key}`}
+            role="tab"
+            aria-selected={i === 0 ? "true" : "false"}
+            aria-controls={`${panelPrefix}-${key}`}
+            class="prop-tab"
+            data-tab={key}
+          >
+            <Icon name={icon} class="prop-tab-icon" strokeWidth={1.75} />
+            <span class="prop-tab-label">{label}</span>
+          </button>
+        ))}
+        <span class="prop-tab-indicator" aria-hidden="true" />
+      </div>
+    </nav>
+
+    <!-- ── Panels ──────────────────────────────────────────────── -->
+    <div class="prop-modal-body">
+
+      <!-- ── 1. Residencia ───────────────────────────────────── -->
+      <section
+        id={`${panelPrefix}-residencia`}
+        role="tabpanel"
+        aria-labelledby={`${tabPrefix}-residencia`}
+        class="prop-panel"
+        data-panel="residencia"
+      >
+        <!-- Narrativa editorial del .md -->
+        <div class="prose prose-zerho max-w-none">
+          <Content />
+        </div>
+
+        <!-- Fraccionamiento -->
+        {hasFractionment && (
+          <div class="prop-section mt-10">
+            <h3 class="prop-section-title">El Fraccionamiento</h3>
+            <p class="type-body mt-3 text-muted">{data.fractionment!.name}</p>
+            {data.fractionment!.description && (
+              <p class="type-body mt-2 text-muted">{data.fractionment!.description}</p>
+            )}
+            {data.fractionment!.security && (
+              <div class="prop-badge mt-4">
+                <Icon name="shield" class="h-3.5 w-3.5 text-accent-deep" />
+                <span class="type-label text-ink">{data.fractionment!.security}</span>
+              </div>
+            )}
+            {data.fractionment!.amenitiesShared.length > 0 && (
+              <ul class="prop-tag-list mt-5">
+                {data.fractionment!.amenitiesShared.map((a) => (
+                  <li class="prop-tag">{a}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </section>
+
+      <!-- ── 2. Áreas ────────────────────────────────────────── -->
+      <section
+        id={`${panelPrefix}-areas`}
+        role="tabpanel"
+        aria-labelledby={`${tabPrefix}-areas`}
+        class="prop-panel"
+        data-panel="areas"
+        hidden
+      >
+        <!-- Áreas Sociales y Exteriores primero -->
+        {data.amenities.length > 0 && (
+          <div class="prop-section-first">
+            <h3 class="prop-section-title">Áreas Sociales y Exteriores</h3>
+            <AmenityList items={data.amenities} class="mt-5" />
+          </div>
+        )}
+
+        <!-- Áreas Privadas después -->
+        {privateAreas.length > 0 && (
+          <div class="prop-section mt-10">
+            <h3 class="prop-section-title">Áreas Privadas</h3>
+            <dl class="prop-spec-grid mt-5">
+              {privateAreas.map((spec) => (
+                <div class="prop-spec-item">
+                  <dt class="type-eyebrow text-muted">{spec.label}</dt>
+                  <dd class="prop-spec-value mt-1.5">{spec.value}</dd>
+                  {spec.note && (
+                    <p class="type-label mt-1 text-muted">{spec.note}</p>
+                  )}
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+      </section>
+
+      <!-- ── 3. Especificaciones ─────────────────────────────── -->
+      <section
+        id={`${panelPrefix}-specs`}
+        role="tabpanel"
+        aria-labelledby={`${tabPrefix}-specs`}
+        class="prop-panel"
+        data-panel="specs"
+        hidden
+      >
+        <SpecSheet items={data.specs} />
+      </section>
+
+      <!-- ── 4. Constructiva ─────────────────────────────────── -->
+      <section
+        id={`${panelPrefix}-constructiva`}
+        role="tabpanel"
+        aria-labelledby={`${tabPrefix}-constructiva`}
+        class="prop-panel"
+        data-panel="constructiva"
+        hidden
+      >
+        {data.construction.length > 0 ? (
+          <ConstructionSpec groups={data.construction} />
+        ) : (
+          <p class="type-body text-muted">
+            La especificación constructiva estará disponible próximamente.
+          </p>
+        )}
+      </section>
+
+      <!-- ── 5. Precio ───────────────────────────────────────── -->
+      <section
+        id={`${panelPrefix}-precio`}
+        role="tabpanel"
+        aria-labelledby={`${tabPrefix}-precio`}
+        class="prop-panel"
+        data-panel="precio"
+        hidden
+      >
+        <!-- Precio hero -->
+        <div class="prop-price-hero">
+          <p class="type-eyebrow text-muted">Precio total · Precio alzado</p>
+          <p class="prop-price-amount mt-2">{formatPrice(data.price, data.currency)}</p>
+          {data.financing?.priceNote && (
+            <p class="type-body mt-3 text-muted max-w-lg">{data.financing.priceNote}</p>
+          )}
+        </div>
+
+        <!-- Qué es precio alzado -->
+        <div class="prop-callout mt-8">
+          <p class="prop-callout-title">¿Qué significa precio alzado?</p>
+          <p class="type-body mt-2 text-muted">
+            El precio que ves es el precio que pagas. Sin ajustes por inflación,
+            sin incrementos por materiales y sin sorpresas al final de la obra.
+            Cada partida —marca, sistema, espesor— queda definida en el proyecto
+            ejecutivo antes de la primera aportación.
+          </p>
+        </div>
+
+        <!-- Esquema de pagos -->
+        {hasFinancing && (
+          <div class="prop-section mt-10">
+            <h3 class="prop-section-title">Esquema de aportaciones</h3>
+            <div class="prop-payment-grid mt-6">
+              {data.financing!.downPayment && (
+                <div class="prop-payment-card prop-payment-card--accent">
+                  <p class="type-eyebrow text-accent-deep">Anticipo</p>
+                  <p class="prop-payment-amount mt-2">
+                    {formatPrice(data.financing!.downPayment, data.currency)}
+                  </p>
+                  {data.financing!.downPaymentNote && (
+                    <p class="type-label mt-3 text-muted leading-relaxed">
+                      {data.financing!.downPaymentNote}
+                    </p>
+                  )}
+                </div>
+              )}
+              {data.financing!.balanceTerms && (
+                <div class="prop-payment-card">
+                  <p class="type-eyebrow text-muted">Saldo restante</p>
+                  <p class="prop-payment-label mt-2 text-ink">{data.financing!.balanceTerms}</p>
+                </div>
+              )}
+              {data.financing!.deliveryMonths && (
+                <div class="prop-payment-card">
+                  <p class="type-eyebrow text-muted">Plazo de entrega</p>
+                  <p class="prop-payment-amount mt-2">
+                    {data.financing!.deliveryMonths}
+                    <span class="prop-payment-unit"> meses</span>
+                  </p>
+                </div>
+              )}
+            </div>
+            {data.financing!.conditions && (
+              <p class="type-label mt-6 leading-relaxed text-muted prop-conditions">
+                {data.financing!.conditions}
+              </p>
+            )}
+          </div>
+        )}
+
+        <!-- Garantía -->
+        <div class="prop-callout prop-callout--accent mt-8">
+          <p class="prop-callout-title">10 años de garantía incluidos</p>
+          <p class="type-body mt-2 text-muted">
+            La garantía no termina al entregar las llaves. Cubre la estructura
+            durante diez años —lo que protege el valor de tu patrimonio y el
+            bienestar de tu familia en el largo plazo.
+          </p>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-10 flex flex-wrap gap-3">
+          <Button href={whatsappHref(data.title)} external variant="primary" size="sm" icon="arrow-right">
+            Agendar visita · Resolver dudas
+          </Button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ── Contenedor base ──────────────────────────────────────────────────── */
+  .prop-modal {
+    width: 100%;
+    max-width: 100vw;
+    max-height: 100svh;
+    margin: auto 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink);
+    overflow: visible;
+  }
+  .prop-modal-panel {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    max-height: 92svh;
+    border-radius: 1.75rem 1.75rem 0 0;
+    background-color: var(--color-panel);
+    box-shadow: var(--shadow-e3);
+    padding-bottom: env(safe-area-inset-bottom);
+    transform: translate3d(0, 100%, 0);
+    transition: transform 460ms var(--ease-out-quint);
+    overflow: hidden;
+  }
+  .prop-modal[data-state="open"] .prop-modal-panel { transform: none; }
+
+  /* ── Header ───────────────────────────────────────────────────────────── */
+  .prop-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.75rem 1.5rem 1.25rem;
+  }
+  .prop-modal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+  .prop-modal-close {
+    display: grid;
+    height: 2.5rem;
+    width: 2.5rem;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 9999px;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: background-color 200ms, transform 200ms var(--ease-out-expo);
+  }
+  .prop-modal-close:hover  { background-color: var(--color-panel-alt); }
+  .prop-modal-close:active { transform: scale(0.9); }
+
+  /* ── Tab nav ──────────────────────────────────────────────────────────── */
+  .prop-modal-tabs-nav {
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .prop-modal-tabs-nav::-webkit-scrollbar { display: none; }
+
+  .prop-tabs {
+    position: relative;
+    display: flex;
+    /* Tabs fit compactly — no gap needed, padding handles spacing */
+  }
+
+  .prop-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    cursor: pointer;
+    border: 0;
+    background: transparent;
+    transition: color 200ms;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .prop-tab[aria-selected="true"] { color: var(--color-ink); }
+
+  .prop-tab-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 200ms;
+  }
+  .prop-tab[aria-selected="true"] .prop-tab-icon { opacity: 1; }
+
+  /* Gliding underline */
+  .prop-tab-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 2px 2px 0 0;
+    transition:
+      left  260ms var(--ease-out-quint),
+      width 260ms var(--ease-out-quint);
+  }
+
+  /* ── Body / panels ────────────────────────────────────────────────────── */
+  .prop-modal-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    padding: 2rem 1.5rem 2.5rem;
+  }
+  .prop-modal-body::-webkit-scrollbar { display: none; }
+
+  .prop-panel[hidden] { display: none; }
+
+  /* ── Section blocks ───────────────────────────────────────────────────── */
+  .prop-section-first { /* no top border for the first block in a panel */ }
+
+  .prop-section {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .prop-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* ── Spec grid (áreas privadas) ───────────────────────────────────────── */
+  .prop-spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 1.25rem;
+  }
+  .prop-spec-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    line-height: 1.2;
+  }
+
+  /* ── Tags & badge ─────────────────────────────────────────────────────── */
+  .prop-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+  }
+  .prop-tag {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+    background: var(--color-canvas);
+  }
+  .prop-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  /* ── Precio tab ───────────────────────────────────────────────────────── */
+  .prop-price-hero {
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .prop-price-amount {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    line-height: 1;
+  }
+  .prop-callout {
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: var(--color-panel-alt);
+    border: 1px solid var(--color-line);
+  }
+  .prop-callout--accent {
+    background: color-mix(in srgb, var(--color-accent) 6%, var(--color-panel));
+    border-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+  .prop-callout-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .prop-payment-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  }
+  .prop-payment-card {
+    padding: 1.25rem 1.5rem;
+    border-radius: 1.1rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-canvas);
+  }
+  .prop-payment-card--accent {
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 7%, var(--color-canvas));
+  }
+  .prop-payment-amount {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    line-height: 1.1;
+  }
+  .prop-payment-unit {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+  .prop-payment-label { font-size: 0.93rem; line-height: 1.45; }
+  .prop-conditions {
+    border-left: 2px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+    padding-left: 1rem;
+  }
+
+  /* ── Backdrop ─────────────────────────────────────────────────────────── */
+  .prop-modal::backdrop {
+    background-color: rgb(27 31 25 / 0);
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+    transition:
+      background-color 460ms var(--ease-out-quint),
+      backdrop-filter  460ms var(--ease-out-quint);
+  }
+  .prop-modal[data-state="open"]::backdrop {
+    background-color: rgb(27 31 25 / 0.46);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* ── Desktop ──────────────────────────────────────────────────────────── */
+  @media (min-width: 640px) {
+    .prop-modal {
+      width: min(68rem, calc(100vw - 4rem));
+      margin: auto;
+    }
+    .prop-modal-panel {
+      max-height: min(90svh, 58rem);
+      border-radius: var(--radius-frame);
+      padding-bottom: 0;
+      opacity: 0;
+      filter: blur(6px);
+      transform: scale(0.96);
+      transition:
+        transform 420ms var(--ease-out-quint),
+        opacity   320ms var(--ease-out-quint),
+        filter    320ms var(--ease-out-quint);
+    }
+    .prop-modal[data-state="open"] .prop-modal-panel {
+      opacity: 1;
+      filter: none;
+      transform: none;
+    }
+    .prop-modal-header   { padding: 2.25rem 2.5rem 1.5rem; }
+    .prop-modal-tabs-nav { padding: 0 2.5rem; }
+    .prop-modal-body     { padding: 2.25rem 2.5rem 2.75rem; }
+
+    /* On wider screens show the label; on very tight ones icon is enough */
+    .prop-tab { padding: 0.75rem 1rem; }
+  }
+
+  /* ── Reduced motion ───────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .prop-modal-panel,
+    .prop-modal[data-state="open"] .prop-modal-panel {
+      transform: none;
+      filter: none;
+    }
+    .prop-modal-panel {
+      opacity: 0;
+      transition: opacity 160ms linear !important;
+    }
+    .prop-modal[data-state="open"] .prop-modal-panel { opacity: 1; }
+    .prop-tab-indicator { transition: none; }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .prop-modal[data-state="open"]::backdrop {
+      background-color: rgb(27 31 25 / 0.75);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+</style>
+
+<script>
+  import "@/scripts/modal";
+
+  function mountTabs(dialog: HTMLDialogElement) {
+    const tablist = dialog.querySelector<HTMLElement>("[data-tabs]");
+    if (!tablist) return;
+
+    const tabs = Array.from(
+      tablist.querySelectorAll<HTMLButtonElement>("[role=tab]"),
+    );
+    const indicator = tablist.querySelector<HTMLElement>(".prop-tab-indicator");
+    const body = dialog.querySelector<HTMLElement>(".prop-modal-body");
+
+    function moveIndicator(tab: HTMLButtonElement) {
+      if (!indicator) return;
+      indicator.style.left  = `${tab.offsetLeft}px`;
+      indicator.style.width = `${tab.offsetWidth}px`;
+    }
+
+    function activate(tab: HTMLButtonElement) {
+      tabs.forEach((t) =>
+        t.setAttribute("aria-selected", String(t === tab)),
+      );
+      const key = tab.dataset.tab!;
+      dialog.querySelectorAll<HTMLElement>("[data-panel]").forEach((p) => {
+        p.hidden = p.dataset.panel !== key;
+      });
+      if (body) body.scrollTop = 0;
+      moveIndicator(tab);
+    }
+
+    tabs.forEach((tab) => tab.addEventListener("click", () => activate(tab)));
+
+    tablist.addEventListener("keydown", (e: KeyboardEvent) => {
+      const cur = tabs.findIndex(
+        (t) => t.getAttribute("aria-selected") === "true",
+      );
+      let next = cur;
+      if (e.key === "ArrowRight") next = (cur + 1) % tabs.length;
+      else if (e.key === "ArrowLeft") next = (cur - 1 + tabs.length) % tabs.length;
+      else return;
+      e.preventDefault();
+      tabs[next]!.focus();
+      activate(tabs[next]!);
+    });
+
+    const first = tabs.find((t) => t.getAttribute("aria-selected") === "true");
+    if (first) requestAnimationFrame(() => moveIndicator(first));
+
+    // Re-position after dialog opens (geometry may differ before display:block)
+    dialog.addEventListener("modal:open", () => {
+      const active = tabs.find((t) => t.getAttribute("aria-selected") === "true");
+      if (active) requestAnimationFrame(() => moveIndicator(active));
+    });
+  }
+
+  document
+    .querySelectorAll<HTMLDialogElement>("[data-modal].prop-modal")
+    .forEach(mountTabs);
+</script>

@@ -19,9 +19,7 @@ import { pickRandomGalleryImage } from "@/lib/gallery";
 import PropertyHero from "@/components/shared/PropertyHero.astro";
 import SectionHeader from "@/components/shared/SectionHeader.astro";
 import SpecSheet from "@/components/shared/SpecSheet.astro";
-import AmenityList from "@/components/shared/AmenityList.astro";
 import SplitFeature from "@/components/shared/SplitFeature.astro";
-import ConstructionSpec from "@/components/shared/ConstructionSpec.astro";
 import Gallery from "@/components/shared/Gallery.astro";
 import PlansViewer from "@/components/shared/PlansViewer.astro";
 import PillarGrid from "@/components/shared/PillarGrid.astro";
@@ -31,6 +29,7 @@ import CtaSection from "@/components/shared/CtaSection.astro";
 import Button from "@/components/ui/Button.astro";
 import Modal from "@/components/ui/Modal.astro";
 import ModalTrigger from "@/components/ui/ModalTrigger.astro";
+import PropertyDetailModal from "@/components/shared/PropertyDetailModal.astro";
 
 /**
  * Ficha completa de una residencia.
@@ -83,10 +82,14 @@ const MODALS = {
   highlights={data.highlights}
 />
 
-{/* --- Residencia: lo esencial para decidir una visita ----------------------- */}
+{
+  /* --- Residencia: lo esencial para decidir una visita ----------------------- */
+}
 <section class="section-y">
   <div class="container-x grid gap-12 lg:grid-cols-[17rem_1fr] lg:gap-20">
-    <div class="reveal lg:sticky lg:top-[calc(var(--chrome-h)+3rem)] lg:self-start">
+    <div
+      class="reveal lg:sticky lg:top-[calc(var(--chrome-h)+3rem)] lg:self-start"
+    >
       <p class="type-eyebrow flex items-center gap-3 text-accent-deep">
         <span class="h-px w-8 bg-accent/45" aria-hidden="true"></span>
         La residencia
@@ -122,19 +125,19 @@ const MODALS = {
           Conocer la residencia
         </ModalTrigger>
       </div>
-
-      <AmenityList items={data.amenities} limit={4} class="mt-12" />
     </div>
   </div>
 
-  <Modal id={MODALS.story} eyebrow="La residencia" title={data.title}>
-    <div class="prose prose-zerho max-w-none">
-      <Content />
-    </div>
-  </Modal>
+  <PropertyDetailModal
+    id={MODALS.story}
+    property={property}
+    Content={Content}
+  />
 </section>
 
-{/* --- Compromiso ------------------------------------------------------------ */}
+{
+  /* --- Compromiso ------------------------------------------------------------ */
+}
 <section
   id="compromiso"
   class="section-anchor section-y bg-primary text-on-primary"
@@ -171,7 +174,12 @@ const MODALS = {
     />
   </div>
 
-  <Modal id={MODALS.commitment} eyebrow={PROMISE.eyebrow} title="Cómo trabajamos" size="lg">
+  <Modal
+    id={MODALS.commitment}
+    eyebrow={PROMISE.eyebrow}
+    title="Cómo trabajamos"
+    size="lg"
+  >
     <p class="type-body text-muted">{PROMISE.body}</p>
     <ol class="mt-8 grid gap-x-10 gap-y-7 md:grid-cols-2">
       {
@@ -193,7 +201,9 @@ const MODALS = {
   </Modal>
 </section>
 
-{/* --- Galería --------------------------------------------------------------- */}
+{
+  /* --- Galería --------------------------------------------------------------- */
+}
 <section id="galeria" class="section-anchor section-y">
   <div class="container-x">
     <SectionHeader
@@ -223,9 +233,17 @@ const MODALS = {
     </div>
   </div>
 
-  <Modal id={MODALS.interiors} eyebrow={INTERIORS.eyebrow} title={INTERIORS.title}>
+  <Modal
+    id={MODALS.interiors}
+    eyebrow={INTERIORS.eyebrow}
+    title={INTERIORS.title}
+  >
     <p class="type-subheading text-ink">{INTERIORS.lead}</p>
-    {INTERIORS.body.map((paragraph) => <p class="type-body mt-4 text-muted">{paragraph}</p>)}
+    {
+      INTERIORS.body.map((paragraph) => (
+        <p class="type-body mt-4 text-muted">{paragraph}</p>
+      ))
+    }
     <Fragment slot="footer">
       <Button
         href={whatsappHref(data.title, "interiores")}
@@ -240,7 +258,9 @@ const MODALS = {
   </Modal>
 </section>
 
-{/* --- Planos ---------------------------------------------------------------- */}
+{
+  /* --- Planos ---------------------------------------------------------------- */
+}
 {
   data.plans.length > 0 && (
     <section
@@ -260,8 +280,10 @@ const MODALS = {
   )
 }
 
-{/* --- Características: el detalle para comparar ----------------------------- */}
-<section
+{
+  /* --- Características: el detalle para comparar ----------------------------- */
+}
+<!-- <section
   id="caracteristicas"
   class:list={[
     "section-anchor section-y",
@@ -269,21 +291,7 @@ const MODALS = {
   ]}
 >
   <div class="container-x">
-    <SectionHeader eyebrow="Ficha técnica" title="Características principales" />
-
-    <SpecSheet items={data.specs} compact class="mt-10" />
-
-    {
-      data.amenities.length > 0 && (
-        <>
-          <h3 class="reveal type-eyebrow mt-14 text-muted">Lo que la distingue</h3>
-          <AmenityList items={data.amenities} class="mt-5" />
-        </>
-      )
-    }
-
     <SplitFeature
-      class="mt-20 lg:mt-28"
       eyebrow="Especificación constructiva"
       title="Lo que se firma es lo que se construye"
       body={[
@@ -293,32 +301,27 @@ const MODALS = {
       imageAlt={`Interior de ${data.title}`}
       imageSide="right"
     >
-      <ModalTrigger target={MODALS.specs} class="mt-8">
-        Ficha completa
+      <ModalTrigger target={MODALS.story} class="mt-8">
+        Ver ficha completa
       </ModalTrigger>
     </SplitFeature>
 
-    {
-      data.construction.length > 0 && (
-        <ConstructionSpec groups={data.construction} compact class="mt-14" />
-      )
-    }
+    <SpecSheet items={data.specs} compact class="mt-16" />
   </div>
+</section> -->
 
-  <Modal id={MODALS.specs} eyebrow="Ficha técnica" title={`${data.title}, a detalle`} size="lg">
-    <SpecSheet items={data.specs} />
-    {
-      data.construction.length > 0 && (
-        <>
-          <h3 class="type-eyebrow mb-6 mt-10 text-muted">Especificación constructiva</h3>
-          <ConstructionSpec groups={data.construction} />
-        </>
-      )
-    }
-  </Modal>
-</section>
+{
+  /* --- Visita ---------------------------------------------------------------- */
+}
+<CtaSection
+  propertyTitle={data.title}
+  title={`Recorre ${data.title} en persona`}
+  description="Te acompañamos a conocerla y, en una sola conversación, resolvemos juntos el proyecto, los tiempos y el esquema de aportaciones."
+/>
 
-{/* --- Otras oportunidades --------------------------------------------------- */}
+{
+  /* --- Otras oportunidades --------------------------------------------------- */
+}
 {
   others.length > 0 && (
     <section id="otras" class="section-anchor section-y hairline-t bg-panel/60">
@@ -340,10 +343,3 @@ const MODALS = {
     </section>
   )
 }
-
-{/* --- Visita ---------------------------------------------------------------- */}
-<CtaSection
-  propertyTitle={data.title}
-  title={`Recorre ${data.title} en persona`}
-  description="Te acompañamos a conocerla y, en una sola conversación, resolvemos juntos el proyecto, los tiempos y el esquema de aportaciones."
-/>

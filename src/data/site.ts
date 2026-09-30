@@ -39,7 +39,7 @@ export const SECTIONS = [
   { id: "compromiso", label: "Compromiso" },
   { id: "galeria", label: "Galería" },
   { id: "planos", label: "Planos" },
-  { id: "caracteristicas", label: "Características" },
+  // { id: "caracteristicas", label: "Características" },
   { id: "contacto", label: "Visita" },
 ] as const;
 
@@ -116,6 +116,8 @@ export function whatsappHref(
 
 /** Asunto prellenado para el correo. */
 export function mailHref(propertyTitle?: string) {
-  const subject = propertyTitle ? `${propertyTitle} — Zerho` : `Residencias Zerho`;
+  const subject = propertyTitle
+    ? `${propertyTitle} — Zerho`
+    : `Residencias Zerho`;
   return `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
 }

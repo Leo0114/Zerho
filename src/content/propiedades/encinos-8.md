@@ -22,6 +22,8 @@ highlights:
     value: 882.07 m²
   - label: Recámaras
     value: "4"
+  - label: Niveles
+    value: "2"
   - label: Cochera
     value: 4 autos
 
@@ -147,24 +149,41 @@ plans:
 seo:
   title: Encinos 8 — Residencia en preventa en San Pedro Garza García
   description: Residencia de 882 m² sobre 1,067 m² de terreno en San Pedro Garza García. Cuatro recámaras, alberca con jacuzzi y carril de nado, jardín plano y garantía de diez años.
+
+fractionment:
+  name: Los Encinos de San Agustín — San Pedro Garza García
+  description: Uno de los fraccionamientos más exclusivos y consolidados de San Pedro, con acceso controlado, vigilancia las 24 horas y un entorno de arbolado maduro que garantiza privacidad y plusvalía sostenida.
+  security: Acceso controlado 24/7 · Vigilancia perimetral
+  amenitiesShared:
+    - Áreas verdes privadas
+    - Vialidades internas controladas
+    - Entorno de alta plusvalía
+    - Vecindario consolidado de familias patrimoniales
+
+financing:
+  priceNote: Precio fijo desde el contrato. Sin ajustes por inflación ni incrementos durante la obra.
+  downPayment: 35000000
+  downPaymentNote: Al firmar el contrato se escritura el terreno a nombre del comprador. Tu inversión queda protegida desde el día uno.
+  balanceTerms: Saldo en aportaciones mensuales el día 1° de cada mes, vinculadas al avance de obra verificable.
+  deliveryMonths: 18
+  conditions: El precio y el plazo son fijos, condicionados a no realizar modificaciones al proyecto. Cualquier cambio se cotiza por separado antes de ejecutarse.
 ---
 
-## Una casa pensada para quedarse
+## Mil metros de terreno. Tu familia, de por vida.
 
-Encinos 8 se resuelve en dos niveles sobre un terreno excepcional de más de mil
-metros cuadrados, en una de las zonas más exclusivas de San Pedro Garza García.
-La planta baja abre por completo hacia el jardín posterior —plano y aprovechable
-en su totalidad— de modo que la vida social sucede entre el interior y el
-exterior sin escalones ni fronteras.
+Encinos 8 no es la casa más grande del mercado. Es la que mayor calidad de vida
+te da por metro cuadrado —en el fraccionamiento correcto, con el constructor que
+firma a precio alzado y entrega en 18 meses sin excusas.
 
-Alrededor de la alberca se reúnen el jacuzzi, el asoleadero y un carril de nado:
-el jardín no es un fondo, es la estancia principal de la casa. Dentro, la sala
-formal a doble altura, la biblioteca y el bar ordenan la vida social; la cocina
-y la estancia familiar, la de todos los días.
+Mientras otras familias lidian con obras que se extienden y presupuestos que
+crecen, tú recibes las llaves de una residencia en uno de los lotes más
+apreciados de Los Encinos: 1,067 m² de terreno con jardín completamente plano,
+alberca con carril de nado, jacuzzi, sala a doble altura y cochera para cuatro
+autos. Todo definido al centímetro antes de la primera aportación.
 
-La planta alta reúne cuatro recámaras, cada una con baño completo y vestidor
-propio, más una estancia y un gaming room para la familia, con la privacidad
-resuelta desde el trazo y no como un añadido.
+Las cuatro recámaras —cada una con baño completo y vestidor propio— garantizan
+que nadie compite por espacio. El gaming room y la biblioteca son el espacio de
+todos. El jardín es la estancia principal que ningún departamento puede darte.
 
 > Entendemos que tu hogar es el activo más importante de tu patrimonio y el
 > espacio donde tu familia construirá sus mejores recuerdos.

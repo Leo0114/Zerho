@@ -112,6 +112,34 @@ const propiedades = defineCollection({
           description: z.string().optional(),
         })
         .optional(),
+
+      /**
+       * Datos del fraccionamiento y entorno (opcional).
+       * Se muestra en la pestaña "Residencia" del modal.
+       */
+      fractionment: z
+        .object({
+          name: z.string(),
+          description: z.string().optional(),
+          security: z.string().optional(),
+          amenitiesShared: z.array(z.string()).default([]),
+        })
+        .optional(),
+
+      /**
+       * Esquema financiero detallado (opcional).
+       * Se muestra en la pestaña "Precio" del modal.
+       */
+      financing: z
+        .object({
+          priceNote: z.string().optional(),
+          downPayment: z.number().optional(),
+          downPaymentNote: z.string().optional(),
+          balanceTerms: z.string().optional(),
+          deliveryMonths: z.number().optional(),
+          conditions: z.string().optional(),
+        })
+        .optional(),
     }),
 });
 

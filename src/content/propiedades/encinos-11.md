@@ -22,6 +22,8 @@ highlights:
     value: 1,117.81 m²
   - label: Recámaras
     value: "4"
+  - label: Niveles
+    value: "2"
   - label: Cochera
     value: 6 autos
 
@@ -138,23 +140,42 @@ plans:
 seo:
   title: Encinos 11 — Residencia en preventa en San Pedro Garza García
   description: Residencia de 1,117 m² sobre 1,308 m² de terreno en Los Encinos de San Agustín 2, San Pedro Garza García. Cuatro recámaras, alberca de 87 m², cochera para 6 autos y jardín plano de 455 m². Proyecto JAL Arquitectos.
+
+fractionment:
+  name: Los Encinos de San Agustín 2 — Sierra de Arteaga, San Pedro Garza García
+  description: Fraccionamiento residencial de máxima exclusividad y seguridad, con acceso controlado las 24 horas, rodeado de arbolado de la Sierra de Arteaga. Entorno consolidado con las mejores familias de San Pedro y plusvalía demostrada año con año.
+  security: Acceso controlado 24/7 · Vigilancia perimetral Sierra de Arteaga
+  amenitiesShared:
+    - Áreas verdes con arbolado de la Sierra
+    - Entorno de máxima plusvalía
+    - Vialidades internas controladas
+    - Vecindario de alto nivel con familias patrimoniales
+
+financing:
+  priceNote: Precio fijo desde el contrato. Sin ajustes por inflación ni incrementos durante la obra. El terreno se escritura a tu nombre desde la primera aportación.
+  downPayment: 43500000
+  downPaymentNote: Al firmar el contrato se escritura el Lote 39 a nombre del comprador. Tu inversión queda protegida con un activo real desde el día uno.
+  balanceTerms: Saldo en aportaciones mensuales el día 1° de cada mes, vinculadas al avance de obra verificable.
+  deliveryMonths: 20
+  conditions: El precio y el plazo son fijos, condicionados a no realizar modificaciones al proyecto. Los paneles solares e interiorismo se cotizan por separado. Cualquier cambio se fija en tiempo y costo antes de ejecutarse.
 ---
 
-## Un terreno de escala excepcional en la Sierra de Arteaga
+## 455 m² de jardín plano. Alberca de 87 m². Cochera para 6 autos. Precio alzado.
 
-Encinos 11 se levanta sobre el Lote 39 de Los Encinos de San Agustín 2, uno de los
-fraccionamientos más exclusivos y con mayor nivel de seguridad en San Pedro Garza García.
-Con más de 1,308 m² de terreno y 1,117 m² construidos en dos niveles, esta residencia
-ofrece una escala que pocas propiedades alcanzan en la zona.
+Encinos 11 es la residencia que te permite vivir a la escala que merece tu
+familia —sin el riesgo de una obra con presupuesto abierto. El Lote 39 de Los
+Encinos de San Agustín 2 ofrece 1,308 m² de terreno, casi la mitad en jardín
+totalmente plano: ninguna escalera, ningún talud, todo el espacio aprovechable
+desde el primer día.
 
-El patio posterior —totalmente plano en sus 455.83 m²— se convierte en la estancia
-principal de la casa: la alberca de 87 m², la terraza cubierta con asador y el jardín
-forman un continuo que extiende la vida social hacia el exterior sin escalones ni fronteras.
-La cochera techada para seis vehículos cierra una propuesta que no deja nada al azar.
+Mientras tu familia disfruta la alberca de 87 m² y la terraza con asador, tú
+sabes con exactitud cuánto costaste, cuándo termina y quién responde. Jorge
+Antonio López firma a precio alzado: lo que dices que pagas es lo que pagas,
+en 20 meses con aportaciones vinculadas al avance real de obra.
 
-Las cuatro recámaras, cada una con baño completo y vestidor propio, garantizan la
-privacidad de todos los miembros de la familia. El sistema de climatización Trane de
-alta eficiencia, dividido por zonas, asegura el confort en cada rincón durante todo el año.
+Las cuatro recámaras —cada una con baño completo y vestidor propio— y la
+cochera para seis autos cierran una propuesta donde la privacidad y la amplitud
+estaban en el trazo desde el primer día de proyecto.
 
 > Entendemos que tu hogar es el activo más importante de tu patrimonio y el
 > espacio donde tu familia construirá sus mejores recuerdos.

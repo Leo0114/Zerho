@@ -7,21 +7,6 @@ import SectionNav from "./SectionNav.astro";
 import firstLogo from "@/assets/firstLogo.png";
 import scrollLogo from "@/assets/scrollLogo.png";
 
-/**
- * No es una barra de navegación al uso: no hay más páginas que las fichas.
- * Es la identidad del estudio, el índice de la residencia que estás leyendo y
- * el acceso a las otras dos.
- *
- * Sobre el hero se comporta como cristal transparente: el logotipo claro
- * preside centrado y el índice se retira. En cuanto el hero deja de tocarla,
- * se materializa en cristal esmerilado, el logotipo se desliza a su sitio y
- * cambia a su versión en color, y aparece el índice. El cambio lo dispara un
- * centinela colocado al final del hero, no un umbral de píxeles.
- *
- * En móvil no hay índice de secciones y la marca se queda siempre al centro:
- * la ficha se recorre con el pulgar y la única acción fija es agendar la
- * visita (`StickyVisit`).
- */
 interface Props {
   /** Slug de la residencia que se está viendo, para marcarla en el menú. */
   currentId?: string;
@@ -72,7 +57,11 @@ const LOGO_IMAGE = {
     </a>
 
     <!-- Índice de la residencia (escritorio) -->
-    {showSections && <SectionNav class="section-index mx-auto hidden lg:flex" />}
+    {
+      showSections && (
+        <SectionNav class="section-index mx-auto hidden lg:flex" />
+      )
+    }
 
     <!-- Las otras residencias -->
     <details data-residences class="relative ml-auto shrink-0 lg:ml-0">
@@ -93,7 +82,9 @@ const LOGO_IMAGE = {
       <div
         class="residences-panel absolute right-0 top-[calc(100%+0.75rem)] w-[min(20rem,calc(100vw-2.5rem))] origin-top-right overflow-hidden rounded-[1.25rem] border border-line bg-panel text-ink shadow-e3"
       >
-        <p class="type-eyebrow px-5 pb-1 pt-4 text-muted">Otras oportunidades</p>
+        <p class="type-eyebrow px-5 pb-1 pt-4 text-muted">
+          Otras oportunidades
+        </p>
         <ul class="p-1.5">
           {
             properties.map((property) => {
@@ -228,6 +219,21 @@ const LOGO_IMAGE = {
     opacity: 1;
   }
 
+  /* Liquid-glass pill behind the hero logo */
+  .brand-logo--hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    padding: 0.55rem 1.1rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+      0 4px 24px rgba(0, 0, 0, 0.18);
+  }
+
   /* --- Índice: se retira mientras el logotipo preside el hero ------------- */
   .chrome :global(.section-index) {
     transition:
@@ -273,7 +279,6 @@ const LOGO_IMAGE = {
       filter: none;
       transition: opacity 160ms linear;
     }
-
   }
 </style>
 
@@ -333,7 +338,9 @@ const LOGO_IMAGE = {
       document.querySelectorAll<HTMLElement>("[data-section-nav]"),
     );
     const links = navs.flatMap((nav) =>
-      Array.from(nav.querySelectorAll<HTMLAnchorElement>("[data-section-link]")),
+      Array.from(
+        nav.querySelectorAll<HTMLAnchorElement>("[data-section-link]"),
+      ),
     );
     const sections = [
       ...new Set(links.map((link) => link.dataset.sectionLink!)),
@@ -402,9 +409,8 @@ const LOGO_IMAGE = {
     teardown.push(mountAllIndicators());
 
     /* --- El menú de residencias se cierra al salir de él --- */
-    const details = document.querySelector<HTMLDetailsElement>(
-      "[data-residences]",
-    );
+    const details =
+      document.querySelector<HTMLDetailsElement>("[data-residences]");
 
     if (details) {
       const onPointerDown = (event: PointerEvent) => {

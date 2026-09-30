@@ -22,6 +22,8 @@ highlights:
     value: 576.78 m²
   - label: Recámaras
     value: "3"
+  - label: Niveles
+    value: "3"
   - label: Cochera
     value: 3 autos
 
@@ -187,22 +189,40 @@ plans:
 seo:
   title: Balcones del Campestre — Residencia en preventa en San Pedro Garza García
   description: Residencia de 576 m² en tres plantas sobre 346 m² de terreno en Balcones del Campestre, San Pedro Garza García. Terraza con asador, sala de juegos y garantía de diez años.
+
+fractionment:
+  name: Balcones del Campestre — San Pedro Garza García
+  description: Fraccionamiento privado residencial con acceso controlado las 24 horas, en una de las zonas más consolidadas y seguras de San Pedro Garza García. Entorno familiar con vialidades controladas y vecindario de alto nivel.
+  security: Acceso controlado 24/7 · Vigilancia perimetral
+  amenitiesShared:
+    - Acceso vehicular controlado
+    - Vialidades privadas
+    - Entorno residencial consolidado
+    - Alta plusvalía sostenida
+
+financing:
+  priceNote: Precio fijo desde el contrato. Sin ajustes por inflación, sin costos ocultos y sin incrementos durante la obra.
+  downPaymentNote: Al firmar el contrato se escritura el terreno a nombre del comprador. Tu inversión queda garantizada con un activo real desde el día uno.
+  balanceTerms: Saldo en aportaciones mensuales el día 1° de cada mes, vinculadas al avance de obra verificable.
+  deliveryMonths: 18
+  conditions: El precio y el plazo son fijos, condicionados a no realizar modificaciones al proyecto. Cualquier cambio se fija en tiempo y costo adicional antes de ejecutarse.
 ---
 
-## Arquitectura vertical, vida horizontal
+## Tres plantas. Sala de juegos. Terraza con asador. Todo a precio alzado.
 
-Balcones del Campestre resuelve en tres plantas lo que un terreno de 346 m²
-podría haber comprimido, en uno de los entornos más seguros de San Pedro Garza
-García. El jardín interior lleva luz natural al corazón de la casa y la terraza
-con asador extiende el área social hacia el exterior sin perder continuidad.
+Balcones del Campestre resuelve en 576 m² construidos lo que la mayoría de
+casas no puede: vida social en tres niveles, con un piso completo dedicado
+al entretenimiento —lejos de las recámaras— y terraza exterior de 50 m²
+con asador incluido.
 
-En la planta más baja conviven la sala de juegos, una terraza exterior de
-50 m² y la losa jardín: un piso completo dedicado a reunirse, lejos de las
-recámaras.
+El jardín interior lleva luz natural al corazón de la casa. La losa jardín
+de 52 m² y la sala de juegos de 36 m² le dan a cada miembro de la familia
+su propio espacio, sin que nadie tenga que ceder el suyo.
 
-La climatización se divide por zonas: el sistema central TRANE atiende las áreas
-de uso constante y los minisplits cubren el resto, de modo que la casa nunca
-climatiza lo que nadie está usando.
+Mientras otras obras abren el presupuesto con cada cambio, aquí firmas a
+precio alzado: el contrato define marca, sistema y espesor de cada partida
+antes de la primera aportación. En 18 meses recibes las llaves —y si algo
+no está como se firmó, Zerho responde diez años más.
 
 > Entendemos que tu hogar es el activo más importante de tu patrimonio y el
 > espacio donde tu familia construirá sus mejores recuerdos.

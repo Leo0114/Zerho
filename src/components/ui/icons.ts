@@ -32,7 +32,9 @@ export type IconName =
   | "flame"
   | "sofa"
   | "snowflake"
-  | "height";
+  | "height"
+  | "tag"
+  | "shield";
 
 export const ICON_PATHS: Record<IconName, string> = {
   "arrow-right": '<path d="M4 12h15M13 6l6 6-6 6"/>',
@@ -54,6 +56,8 @@ export const ICON_PATHS: Record<IconName, string> = {
   snowflake:
     '<path d="M2 12h20M12 2v20M20 16l-4-4 4-4M4 8l4 4-4 4M16 4l-4 4-4-4M8 20l4-4 4 4"/>',
   height: '<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>',
+  tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>',
   maximize: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
   "chevron-down": '<path d="m6 9 6 6 6-6"/>',
   "map-pin":
