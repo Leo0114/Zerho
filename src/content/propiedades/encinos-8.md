@@ -113,7 +113,7 @@ construction:
 plans:
   - label: Planta baja
     caption: Áreas sociales a doble altura, cocina y terraza abiertas al jardín y la alberca.
-    image: ../../assets/images/gal/prueba/kara-eads-L7EwHkq1B2s-unsplash.jpg
+    image: ../../assets/images/planos/encinos8/planta-baja.jpeg
     spaces:
       - name: Cochera para 4 vehículos
       - name: Acceso y recibidor
@@ -135,7 +135,7 @@ plans:
       - name: Jacuzzi, asoleadero y carril de nado
   - label: Planta alta
     caption: Cuatro recámaras con baño y vestidor, estancia familiar y gaming room.
-    image: ../../assets/images/gal/prueba/han-han-J2LNF6twaF8-unsplash.jpg
+    image: ../../assets/images/planos/encinos8/planta-alta.jpeg
     spaces:
       - name: Recámara principal con baño y doble vestidor
       - name: Recámara 1 con baño, vestidor y balcón

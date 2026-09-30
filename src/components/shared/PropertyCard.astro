@@ -15,9 +15,10 @@ import {
 interface Props {
   property: Property;
   class?: string;
+  compact?: boolean;
 }
 
-const { property, class: className = "" } = Astro.props;
+const { property, class: className = "", compact = false } = Astro.props;
 const { data } = property;
 const href = propertyHref(property);
 ---
@@ -29,7 +30,7 @@ const href = propertyHref(property);
     className,
   ]}
 >
-  <div class="relative aspect-[4/3] overflow-hidden bg-panel-alt">
+  <div class:list={["relative overflow-hidden bg-panel-alt", compact ? "aspect-[16/9]" : "aspect-[4/3]"]}>
     <Image
       src={data.cover}
       alt={data.coverAlt || `Fachada de ${data.title}`}
@@ -62,30 +63,34 @@ const href = propertyHref(property);
       {formatPrice(data.price, data.currency)}
     </p>
 
-    <dl class="mt-5 flex flex-wrap gap-x-7 gap-y-2 border-t border-line pt-5">
-      {
-        data.highlights.slice(0, 3).map((item) => (
-          <div>
-            <dt class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-muted">
-              {item.label}
-            </dt>
-            <dd class="mt-1.5 text-[0.9rem] font-semibold text-ink tabular-nums">
-              {item.value}
-            </dd>
-          </div>
-        ))
-      }
-    </dl>
+    {!compact && (
+      <>
+        <dl class="mt-5 flex flex-wrap gap-x-7 gap-y-2 border-t border-line pt-5">
+          {
+            data.highlights.slice(0, 3).map((item) => (
+              <div>
+                <dt class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-muted">
+                  {item.label}
+                </dt>
+                <dd class="mt-1.5 text-[0.9rem] font-semibold text-ink tabular-nums">
+                  {item.value}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
 
-    <span
-      class="mt-7 inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent-deep"
-    >
-      Ver residencia
-      <Icon
-        name="arrow-right"
-        class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-1"
-        strokeWidth={1.9}
-      />
-    </span>
+        <span
+          class="mt-7 inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-accent-deep"
+        >
+          Ver residencia
+          <Icon
+            name="arrow-right"
+            class="h-4 w-4 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-1"
+            strokeWidth={1.9}
+          />
+        </span>
+      </>
+    )}
   </div>
 </a>

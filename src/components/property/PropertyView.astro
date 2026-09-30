@@ -1,5 +1,6 @@
 ---
 import { render } from "astro:content";
+import { Image } from "astro:assets";
 
 import {
   COMMITMENTS,
@@ -67,6 +68,7 @@ const MODALS = {
   commitment: modalId("compromiso"),
   interiors: modalId("interiorismo"),
   specs: modalId("ficha"),
+  others: modalId("otras"),
 } as const;
 ---
 
@@ -311,6 +313,29 @@ const MODALS = {
 </section> -->
 
 {
+  /* --- Legado ---------------------------------------------------------------- */
+}
+<section id="legado" class="section-anchor section-y relative overflow-hidden bg-primary-deep text-on-primary">
+  <div class="absolute inset-0 z-0">
+    <Image
+      src={featureImage}
+      alt="Fondo Legado"
+      class="h-full w-full object-cover opacity-25 mix-blend-luminosity"
+      widths={[800, 1600]}
+      sizes="100vw"
+    />
+  </div>
+  <div class="container-x relative z-10">
+    <SectionHeader
+      tone="dark"
+      eyebrow="Trayectoria y Legado"
+      title="Certeza insólita creando hogares extraordinarios"
+      description="Nuestra garantía de 10 años no es una promesa vacía; está respaldada por una trayectoria impecable. Cada proyecto desarrollado por Zerho refleja nuestra visión: construir residencias atemporales con materiales nobles y acabados impecables, entregadas bajo el esquema de precio alzado para la tranquilidad de su familia."
+    />
+  </div>
+</section>
+
+{
   /* --- Visita ---------------------------------------------------------------- */
 }
 <CtaSection
@@ -324,22 +349,24 @@ const MODALS = {
 }
 {
   others.length > 0 && (
-    <section id="otras" class="section-anchor section-y hairline-t bg-panel/60">
-      <div class="container-x">
-        <SectionHeader
-          eyebrow="Otras oportunidades"
-          title="Más residencias en San Pedro"
-          description="El mismo estándar constructivo y el mismo compromiso."
-        />
+    <section id="otras" class="section-anchor section-y hairline-t bg-panel/60 text-center">
+      <div class="container-x flex flex-col items-center">
+        <h2 class="type-eyebrow text-muted">¿No es lo que buscabas?</h2>
+        <p class="type-body mt-4 max-w-lg mx-auto text-ink">
+          Explora otras residencias en San Pedro con el mismo estándar constructivo y el mismo compromiso.
+        </p>
+        <ModalTrigger target={MODALS.others} class="mt-8 mx-auto" variant="outline">
+          Revisar otras oportunidades
+        </ModalTrigger>
+      </div>
 
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:gap-8">
-          {others.map((other, i) => (
-            <div class="reveal" style={`transition-delay:${i * 60}ms`}>
-              <PropertyCard property={other} />
-            </div>
+      <Modal id={MODALS.others} title="Otras residencias en San Pedro">
+        <div class="grid gap-6 sm:grid-cols-2 p-2">
+          {others.map((other) => (
+            <PropertyCard property={other} compact={true} />
           ))}
         </div>
-      </div>
+      </Modal>
     </section>
   )
 }

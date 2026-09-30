@@ -121,7 +121,7 @@ plans:
   - label: Planta baja
     area: 252.08 m²
     caption: Acceso, cochera techada, cocina, sala, comedor, family room y terraza.
-    image: ../../assets/images/gal/prueba/julian-tong-Ol4zff-m5rU-unsplash.jpg
+    image: ../../assets/images/planos/balcones/planta-baja.jpeg
     spaces:
       - name: Cochera
         area: 49.00 m²
@@ -146,7 +146,7 @@ plans:
   - label: Sótano 1
     area: 168.11 m²
     caption: Tres recámaras con vestidor alrededor del jardín interior, más estudio.
-    image: ../../assets/images/gal/prueba/quilia-kdwahpWYfQo-unsplash.jpg
+    image: ../../assets/images/planos/balcones/sotano-1.jpeg
     spaces:
       - name: Jardín interior
         area: 28.10 m²
@@ -168,7 +168,7 @@ plans:
   - label: Sótano 2
     area: 156.59 m²
     caption: Sala de juegos abierta a la terraza exterior y a la losa jardín.
-    image: ../../assets/images/gal/prueba/ona-creative-O7zWFOOoY7E-unsplash.jpg
+    image: ../../assets/images/planos/balcones/sotano-2.jpeg
     spaces:
       - name: Sala de juegos
         area: 36.27 m²

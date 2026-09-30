@@ -15,7 +15,7 @@ export const SITE = {
   director: "Jorge Antonio López",
   directorRole: "Dirección de proyecto",
   /** Firma de marca: cierra el pie de todas las fichas. */
-  signature: "Construimos su legado, ustedes las historias",
+  signature: "Certeza insólita creando hogares extraordinarios",
   // TODO(cliente): datos de contacto provisionales (lorem ipsum). Sustituir
   // por la persona, el correo y los teléfonos definitivos antes de publicar.
   /** Persona que atiende las visitas; da nombre y rostro al contacto. */
@@ -39,7 +39,7 @@ export const SECTIONS = [
   { id: "compromiso", label: "Compromiso" },
   { id: "galeria", label: "Galería" },
   { id: "planos", label: "Planos" },
-  // { id: "caracteristicas", label: "Características" },
+  { id: "legado", label: "Legado" },
   { id: "contacto", label: "Visita" },
 ] as const;
 

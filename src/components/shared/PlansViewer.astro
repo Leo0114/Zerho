@@ -4,20 +4,6 @@ import Icon from "@/components/ui/Icon.astro";
 import Modal from "@/components/ui/Modal.astro";
 import ModalTrigger from "@/components/ui/ModalTrigger.astro";
 
-/**
- * Visor de plantas arquitectónicas.
- *
- * Las láminas no se montan y desmontan al cambiar de pestaña: conviven apiladas
- * y se funden entre sí. Así el alto del bloque no salta y el cambio se siente
- * instantáneo porque no hay carga.
- *
- * Al ampliar una lámina se abre un solo recorrido con todas las plantas; lo que
- * se navegue a pantalla completa mueve también la pestaña activa, de modo que
- * al cerrar se vuelve a la planta que se estaba viendo.
- *
- * La caja tiene un alto máximo en escritorio para que la lámina completa, sus
- * pestañas y su leyenda quepan en una pantalla de portátil (≈ 1280×800).
- */
 interface Plan {
   label: string;
   caption?: string;
@@ -250,7 +236,9 @@ const hasProgram = plans.some((plan) => plan.spaces?.length);
           tab.setAttribute("aria-selected", String(i === index));
         });
         for (const layer of layers) {
-          const i = Number(layer.dataset.planPanel ?? layer.dataset.planCaption);
+          const i = Number(
+            layer.dataset.planPanel ?? layer.dataset.planCaption,
+          );
           layer.toggleAttribute("data-active", i === index);
         }
       };
