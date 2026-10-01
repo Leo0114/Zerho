@@ -59,9 +59,11 @@ const href = propertyHref(property);
       {data.location}
     </p>
 
-    <p class="type-stat mt-5 text-ink">
-      {formatPrice(data.price, data.currency)}
-    </p>
+    {!compact && (
+      <p class="type-stat mt-5 text-ink">
+        {formatPrice(data.price, data.currency)}
+      </p>
+    )}
 
     {!compact && (
       <>

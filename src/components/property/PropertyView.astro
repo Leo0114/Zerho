@@ -315,7 +315,10 @@ const MODALS = {
 {
   /* --- Legado ---------------------------------------------------------------- */
 }
-<section id="legado" class="section-anchor section-y relative overflow-hidden bg-primary-deep text-on-primary">
+<section
+  id="legado"
+  class="section-anchor section-y relative overflow-hidden bg-primary-deep text-on-primary"
+>
   <div class="absolute inset-0 z-0">
     <Image
       src={featureImage}
@@ -349,13 +352,21 @@ const MODALS = {
 }
 {
   others.length > 0 && (
-    <section id="otras" class="section-anchor section-y hairline-t bg-panel/60 text-center">
+    <section
+      id="otras"
+      class="section-anchor section-y hairline-t bg-panel/60 text-center"
+    >
       <div class="container-x flex flex-col items-center">
         <h2 class="type-eyebrow text-muted">¿No es lo que buscabas?</h2>
         <p class="type-body mt-4 max-w-lg mx-auto text-ink">
-          Explora otras residencias en San Pedro con el mismo estándar constructivo y el mismo compromiso.
+          Explora otras residencias en San Pedro con el mismo estándar
+          constructivo y el mismo compromiso.
         </p>
-        <ModalTrigger target={MODALS.others} class="mt-8 mx-auto" variant="outline">
+        <ModalTrigger
+          target={MODALS.others}
+          class="mt-8 mx-auto"
+          variant="quiet"
+        >
           Revisar otras oportunidades
         </ModalTrigger>
       </div>
