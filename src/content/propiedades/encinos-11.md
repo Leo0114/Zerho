@@ -109,12 +109,10 @@ construction:
       - title: Preparación para paneles solares
         body: La residencia cuenta con la infraestructura lista para la instalación de paneles solares, a cotizar por separado según las necesidades del comprador.
 
-# Planos de muestra. Sustituir por los archivos definitivos del proyecto
-# ejecutivo cuando estén liberados.
 plans:
   - label: Planta baja
     caption: Áreas sociales, cocina y terraza con asador abiertos hacia la alberca y el jardín posterior.
-    image: ../../assets/images/gal/prueba/lydia-mailloux-Ex9TEVXTrPw-unsplash.jpg
+    image: ../../assets/images/planos/encinos11/planta-baja.png
     spaces:
       - name: Cochera techada para 6 vehículos
       - name: Acceso y recibidor
@@ -129,7 +127,7 @@ plans:
         area: 455.83 m²
   - label: Planta alta
     caption: Cuatro recámaras, cada una con baño completo y vestidor propio.
-    image: ../../assets/images/gal/prueba/mehran-arjmand-yN79VOWWYKM-unsplash.jpg
+    image: ../../assets/images/planos/encinos11/planta-alta.png
     spaces:
       - name: Recámara principal con baño y doble vestidor
       - name: Recámara 2 con baño y vestidor

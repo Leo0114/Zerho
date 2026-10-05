@@ -121,8 +121,15 @@ const {
       style="transition-delay:300ms"
     >
       {
-        highlights.map((item) => (
-          <div class="bg-black/25 px-5 py-5 backdrop-blur-md">
+        highlights.map((item, i) => (
+          <div
+            class:list={[
+              "bg-black/25 px-5 py-5 backdrop-blur-md",
+              highlights.length % 2 !== 0 && i === highlights.length - 1
+                ? "col-span-2 sm:col-span-1"
+                : "",
+            ]}
+          >
             <dt class="type-eyebrow text-white/55">{item.label}</dt>
             <dd class="type-stat mt-2.5 text-white">{item.value}</dd>
           </div>
