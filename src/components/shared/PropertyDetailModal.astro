@@ -16,7 +16,7 @@ import SpecSheet from "@/components/shared/SpecSheet.astro";
 import ConstructionSpec from "@/components/shared/ConstructionSpec.astro";
 import Icon from "@/components/ui/Icon.astro";
 import Button from "@/components/ui/Button.astro";
-import { whatsappHref } from "@/data/site";
+import { PROMISE, COMMITMENTS, whatsappHref } from "@/data/site";
 
 interface Props {
   id: string;
@@ -33,11 +33,11 @@ const panelPrefix = `${id}-panel`;
 
 /** Tab definitions — order matches the UX spec */
 const TABS = [
-  { key: "residencia",  label: "Residencia",       icon: "book"   },
-  { key: "areas",       label: "Áreas",             icon: "tree"   },
-  { key: "specs",       label: "Especificaciones",  icon: "layers" },
-  { key: "constructiva",label: "Constructiva",      icon: "ruler"  },
-  { key: "precio",      label: "Precio",            icon: "tag"    },
+  { key: "fraccionamiento", label: "Fraccionamiento",  icon: "map-pin" },
+  { key: "residencia",      label: "Residencia",       icon: "book"   },
+  { key: "specs",           label: "Especificaciones", icon: "layers" },
+  { key: "acabados",        label: "Acabados",         icon: "ruler"  },
+  { key: "compromiso",      label: "Cómo trabajamos",  icon: "shield" },
 ] as const;
 
 const hasFinancing    = !!data.financing;
@@ -91,22 +91,16 @@ const privateAreas = data.specs.filter((s) =>
     <!-- ── Panels ──────────────────────────────────────────────── -->
     <div class="prop-modal-body">
 
-      <!-- ── 1. Residencia ───────────────────────────────────── -->
+      <!-- ── 1. Fraccionamiento ───────────────────────────────────── -->
       <section
-        id={`${panelPrefix}-residencia`}
+        id={`${panelPrefix}-fraccionamiento`}
         role="tabpanel"
-        aria-labelledby={`${tabPrefix}-residencia`}
+        aria-labelledby={`${tabPrefix}-fraccionamiento`}
         class="prop-panel"
-        data-panel="residencia"
+        data-panel="fraccionamiento"
       >
-        <!-- Narrativa editorial del .md -->
-        <div class="prose prose-zerho max-w-none">
-          <Content />
-        </div>
-
-        <!-- Fraccionamiento -->
-        {hasFractionment && (
-          <div class="prop-section mt-10">
+        {hasFractionment ? (
+          <div class="prop-section-first">
             <h3 class="prop-section-title">El Fraccionamiento</h3>
             <p class="type-body mt-3 text-muted">{data.fractionment!.name}</p>
             {data.fractionment!.description && (
@@ -126,21 +120,40 @@ const privateAreas = data.specs.filter((s) =>
               </ul>
             )}
           </div>
+        ) : (
+          <p class="type-body text-muted">
+            Información del fraccionamiento no disponible.
+          </p>
         )}
       </section>
 
-      <!-- ── 2. Áreas ────────────────────────────────────────── -->
+      <!-- ── 2. Residencia ───────────────────────────────────── -->
       <section
-        id={`${panelPrefix}-areas`}
+        id={`${panelPrefix}-residencia`}
         role="tabpanel"
-        aria-labelledby={`${tabPrefix}-areas`}
+        aria-labelledby={`${tabPrefix}-residencia`}
         class="prop-panel"
-        data-panel="areas"
+        data-panel="residencia"
+        hidden
+      >
+        <!-- Narrativa editorial del .md -->
+        <div class="prose prose-zerho max-w-none">
+          <Content />
+        </div>
+      </section>
+
+      <!-- ── 3. Especificaciones (Fusión Áreas y Especificaciones) ─────────────────────────────── -->
+      <section
+        id={`${panelPrefix}-specs`}
+        role="tabpanel"
+        aria-labelledby={`${tabPrefix}-specs`}
+        class="prop-panel"
+        data-panel="specs"
         hidden
       >
         <!-- Áreas Sociales y Exteriores primero -->
         {data.amenities.length > 0 && (
-          <div class="prop-section-first">
+          <div class="prop-section-first mb-10">
             <h3 class="prop-section-title">Áreas Sociales y Exteriores</h3>
             <AmenityList items={data.amenities} class="mt-5" />
           </div>
@@ -148,7 +161,7 @@ const privateAreas = data.specs.filter((s) =>
 
         <!-- Áreas Privadas después -->
         {privateAreas.length > 0 && (
-          <div class="prop-section mt-10">
+          <div class="prop-section mb-10">
             <h3 class="prop-section-title">Áreas Privadas</h3>
             <dl class="prop-spec-grid mt-5">
               {privateAreas.map((spec) => (
@@ -163,123 +176,64 @@ const privateAreas = data.specs.filter((s) =>
             </dl>
           </div>
         )}
+
+        <div class="prop-section">
+          <h3 class="prop-section-title mb-5">Ficha Técnica</h3>
+          <SpecSheet items={data.specs} />
+        </div>
       </section>
 
-      <!-- ── 3. Especificaciones ─────────────────────────────── -->
+      <!-- ── 4. Acabados ─────────────────────────────────── -->
       <section
-        id={`${panelPrefix}-specs`}
+        id={`${panelPrefix}-acabados`}
         role="tabpanel"
-        aria-labelledby={`${tabPrefix}-specs`}
+        aria-labelledby={`${tabPrefix}-acabados`}
         class="prop-panel"
-        data-panel="specs"
-        hidden
-      >
-        <SpecSheet items={data.specs} />
-      </section>
-
-      <!-- ── 4. Constructiva ─────────────────────────────────── -->
-      <section
-        id={`${panelPrefix}-constructiva`}
-        role="tabpanel"
-        aria-labelledby={`${tabPrefix}-constructiva`}
-        class="prop-panel"
-        data-panel="constructiva"
+        data-panel="acabados"
         hidden
       >
         {data.construction.length > 0 ? (
           <ConstructionSpec groups={data.construction} />
         ) : (
           <p class="type-body text-muted">
-            La especificación constructiva estará disponible próximamente.
+            Los detalles de acabados estarán disponibles próximamente.
           </p>
         )}
       </section>
 
-      <!-- ── 5. Precio ───────────────────────────────────────── -->
+      <!-- ── 5. Compromiso ───────────────────────────────────────── -->
       <section
-        id={`${panelPrefix}-precio`}
+        id={`${panelPrefix}-compromiso`}
         role="tabpanel"
-        aria-labelledby={`${tabPrefix}-precio`}
+        aria-labelledby={`${tabPrefix}-compromiso`}
         class="prop-panel"
-        data-panel="precio"
+        data-panel="compromiso"
         hidden
       >
-        <!-- Precio hero -->
-        <div class="prop-price-hero">
-          <p class="type-eyebrow text-muted">Precio total · Precio alzado</p>
-          <p class="prop-price-amount mt-2">{formatPrice(data.price, data.currency)}</p>
-          {data.financing?.priceNote && (
-            <p class="type-body mt-3 text-muted max-w-lg">{data.financing.priceNote}</p>
-          )}
-        </div>
-
-        <!-- Qué es precio alzado -->
-        <div class="prop-callout mt-8">
-          <p class="prop-callout-title">¿Qué significa precio alzado?</p>
-          <p class="type-body mt-2 text-muted">
-            El precio que ves es el precio que pagas. Sin ajustes por inflación,
-            sin incrementos por materiales y sin sorpresas al final de la obra.
-            Cada partida —marca, sistema, espesor— queda definida en el proyecto
-            ejecutivo antes de la primera aportación.
-          </p>
-        </div>
-
-        <!-- Esquema de pagos -->
-        {hasFinancing && (
-          <div class="prop-section mt-10">
-            <h3 class="prop-section-title">Esquema de aportaciones</h3>
-            <div class="prop-payment-grid mt-6">
-              {data.financing!.downPayment && (
-                <div class="prop-payment-card prop-payment-card--accent">
-                  <p class="type-eyebrow text-accent-deep">Anticipo</p>
-                  <p class="prop-payment-amount mt-2">
-                    {formatPrice(data.financing!.downPayment, data.currency)}
+        <div class="prop-section-first">
+          <p class="type-body text-muted max-w-2xl">{PROMISE.body}</p>
+          <ol class="mt-8 grid gap-x-10 gap-y-7 md:grid-cols-2">
+            {
+              COMMITMENTS.map((item, i) => (
+                <li>
+                  <span class="type-label tabular-nums text-accent-deep">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 class="mt-2 text-[1.05rem] font-semibold leading-snug tracking-[-0.01em] text-ink">
+                    {item.title}
+                  </h3>
+                  <p class="mt-1.5 text-[0.93rem] leading-relaxed text-muted">
+                    {item.body}
                   </p>
-                  {data.financing!.downPaymentNote && (
-                    <p class="type-label mt-3 text-muted leading-relaxed">
-                      {data.financing!.downPaymentNote}
-                    </p>
-                  )}
-                </div>
-              )}
-              {data.financing!.balanceTerms && (
-                <div class="prop-payment-card">
-                  <p class="type-eyebrow text-muted">Saldo restante</p>
-                  <p class="prop-payment-label mt-2 text-ink">{data.financing!.balanceTerms}</p>
-                </div>
-              )}
-              {data.financing!.deliveryMonths && (
-                <div class="prop-payment-card">
-                  <p class="type-eyebrow text-muted">Plazo de entrega</p>
-                  <p class="prop-payment-amount mt-2">
-                    {data.financing!.deliveryMonths}
-                    <span class="prop-payment-unit"> meses</span>
-                  </p>
-                </div>
-              )}
-            </div>
-            {data.financing!.conditions && (
-              <p class="type-label mt-6 leading-relaxed text-muted prop-conditions">
-                {data.financing!.conditions}
-              </p>
-            )}
-          </div>
-        )}
-
-        <!-- Garantía -->
-        <div class="prop-callout prop-callout--accent mt-8">
-          <p class="prop-callout-title">10 años de garantía incluidos</p>
-          <p class="type-body mt-2 text-muted">
-            La garantía no termina al entregar las llaves. Cubre la estructura
-            durante diez años —lo que protege el valor de tu patrimonio y el
-            bienestar de tu familia en el largo plazo.
-          </p>
+                </li>
+              ))
+            }
+          </ol>
         </div>
 
-        <!-- CTA -->
-        <div class="mt-10 flex flex-wrap gap-3">
+        <div class="mt-10 pt-8 border-t border-line flex flex-wrap gap-3">
           <Button href={whatsappHref(data.title)} external variant="primary" size="sm" icon="arrow-right">
-            Agendar visita · Resolver dudas
+            Contactar para más detalles
           </Button>
         </div>
       </section>

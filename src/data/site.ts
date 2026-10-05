@@ -70,7 +70,7 @@ export const COMMITMENTS = [
 ] as const;
 
 export const WARRANTY = {
-  years: "10",
+  years: "5",
   title: "Garantía y respaldo",
   body: "Nuestra garantía no es una promesa vacía; está respaldada por una trayectoria con más de 30 años de experiencia. Nuestro compromiso no termina al entregar las llaves, protegemos tu patrimonio para que tu residencia conserve su plusvalía y belleza a través del tiempo.",
 } as const;
