@@ -204,7 +204,7 @@ financing:
   priceNote: Precio fijo desde el contrato. Sin ajustes por inflación, sin costos ocultos y sin incrementos durante la obra.
   downPaymentNote: Al firmar el contrato se escritura el terreno a nombre del comprador. Tu inversión queda garantizada con un activo real desde el día uno.
   balanceTerms: Saldo en aportaciones mensuales el día 1° de cada mes, vinculadas al avance de obra verificable.
-  deliveryMonths: 18
+  deliveryMonths: 20
   conditions: El precio y el plazo son fijos, condicionados a no realizar modificaciones al proyecto. Cualquier cambio se fija en tiempo y costo adicional antes de ejecutarse.
 ---
 

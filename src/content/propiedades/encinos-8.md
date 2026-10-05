@@ -165,15 +165,13 @@ financing:
   downPayment: 35000000
   downPaymentNote: Al firmar el contrato se escritura el terreno a nombre del comprador. Tu inversión queda protegida desde el día uno.
   balanceTerms: Saldo en aportaciones mensuales el día 1° de cada mes, vinculadas al avance de obra verificable.
-  deliveryMonths: 18
+  deliveryMonths: 20
   conditions: El precio y el plazo son fijos, condicionados a no realizar modificaciones al proyecto. Cualquier cambio se cotiza por separado antes de ejecutarse.
 ---
 
-## Mil metros de terreno. Tu familia, de por vida.
+## El espacio para tu familia. La certeza que exige tu inversión
 
-Encinos 8 no es la casa más grande del mercado. Es la que mayor calidad de vida
-te da por metro cuadrado —en el fraccionamiento correcto, con el constructor que
-firma a precio alzado y entrega en 18 meses sin excusas.
+Una residencia ubicada en las faldas de la Sierra Madre, en el corazón de San Pedro Garza García, que logra el balance perfecto entre la naturaleza y la vida cosmopolita. Entrega en tiempo récord 20 meses y sin costos ocultos.
 
 Mientras otras familias lidian con obras que se extienden y presupuestos que
 crecen, tú recibes las llaves de una residencia en uno de los lotes más

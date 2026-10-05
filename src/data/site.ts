@@ -19,11 +19,11 @@ export const SITE = {
   // TODO(cliente): datos de contacto provisionales (lorem ipsum). Sustituir
   // por la persona, el correo y los teléfonos definitivos antes de publicar.
   /** Persona que atiende las visitas; da nombre y rostro al contacto. */
-  contactPerson: "Lorem Ipsum",
-  email: "lorem@ipsum.mx",
-  phone: "+52 (81) 0000 0000",
-  phoneHref: "+528100000000",
-  whatsapp: "528100000000",
+  contactPerson: "Ana Treviño",
+  email: "atrevino@arquitectosasociados.mx",
+  phone: "+52 81 2025 3696",
+  phoneHref: "528120253696",
+  whatsapp: "528120253696",
   city: "San Pedro Garza García, Nuevo León",
   instagram: "https://www.instagram.com/",
 } as const;
@@ -71,16 +71,17 @@ export const COMMITMENTS = [
 
 export const WARRANTY = {
   years: "10",
-  title: "Garantía y respaldo por diez años",
-  body: "Un horizonte largo para proteger tu patrimonio y asegurar su plusvalía. Nuestro compromiso no termina al entregar las llaves.",
+  title: "Garantía y respaldo",
+  body: "Nuestra garantía no es una promesa vacía; está respaldada por una trayectoria con más de 30 años de experiencia. Nuestro compromiso no termina al entregar las llaves, protegemos tu patrimonio para que tu residencia conserve su plusvalía y belleza a través del tiempo.",
 } as const;
 
 /** Mensaje de marca que abre la sección de compromiso en todas las fichas. */
 export const PROMISE = {
   eyebrow: "Nuestro compromiso",
-  title: "Tu hogar es el activo más importante de tu patrimonio",
+  title:
+    "Tu hogar, el activo más importante de tu patrimonio y el espacio donde tu familia construirá sus mejores recuerdos.",
   lead: "Y el espacio donde tu familia construirá sus mejores recuerdos. Por eso trabajamos así:",
-  body: "Entendemos que es también el espacio donde tu familia construirá sus mejores recuerdos. Por eso ofrecemos residencias en preventa exclusiva respaldadas por una absoluta certeza constructiva y financiera, acompañándote paso a paso para garantizar que el resultado final sea, sin excepciones, la casa que siempre soñaste.",
+  body: "Transformamos la construcción residencial en una experiencia de certidumbre total: una metodología probada que blindará tu patrimonio, tu tiempo y la fidelidad a tu diseño.",
 } as const;
 
 /**
