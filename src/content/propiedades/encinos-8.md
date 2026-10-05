@@ -26,6 +26,8 @@ highlights:
     value: "2"
   - label: Cochera
     value: 4 autos
+  - label: Entrega
+    value: Dic 2025
 
 amenities:
   - label: Alberca
