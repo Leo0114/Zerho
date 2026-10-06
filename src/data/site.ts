@@ -39,7 +39,7 @@ export const SECTIONS = [
   { id: "compromiso", label: "Compromiso" },
   { id: "galeria", label: "Galería" },
   { id: "planos", label: "Planos" },
-  { id: "legado", label: "Legado" },
+  // { id: "legado", label: "Legado" },
   { id: "contacto", label: "Visita" },
 ] as const;
 
