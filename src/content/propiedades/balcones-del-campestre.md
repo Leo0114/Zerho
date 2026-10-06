@@ -26,6 +26,8 @@ highlights:
     value: "3"
   - label: Cochera
     value: 3 autos
+  - label: Entrega
+    value: 20 meses
 
 amenities:
   - label: Terraza exterior
