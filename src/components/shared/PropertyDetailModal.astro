@@ -27,7 +27,7 @@ const TABS = [
   // { key: "residencia", label: "Residencia", icon: "book" },
   { key: "specs", label: "Especificaciones", icon: "layers" },
   { key: "acabados", label: "Acabados", icon: "ruler" },
-  { key: "compromiso", label: "Cómo trabajamos", icon: "shield" },
+  // { key: "compromiso", label: "Cómo trabajamos", icon: "shield" },
 ] as const;
 
 const hasFinancing = !!data.financing;
@@ -210,7 +210,7 @@ const privateAreas = data.specs.filter((s) =>
       </section>
 
       <!-- ── 5. Compromiso ───────────────────────────────────────── -->
-      <section
+      <!-- <section
         id={`${panelPrefix}-compromiso`}
         role="tabpanel"
         aria-labelledby={`${tabPrefix}-compromiso`}
@@ -250,7 +250,7 @@ const privateAreas = data.specs.filter((s) =>
             Contactar para más detalles
           </Button>
         </div>
-      </section>
+      </section> -->
     </div>
   </div>
 </dialog>

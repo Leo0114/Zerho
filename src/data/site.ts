@@ -80,7 +80,7 @@ export const PROMISE = {
   eyebrow: "Nuestro compromiso",
   title:
     "Tu hogar, el activo más importante de tu patrimonio y el espacio donde tu familia construirá sus mejores recuerdos.",
-  lead: "Y el espacio donde tu familia construirá sus mejores recuerdos. Por eso trabajamos así:",
+  lead: "Ver esquema operativo y financiero",
   body: "Transformamos la construcción residencial en una experiencia de certidumbre total: una metodología probada que blindará tu patrimonio, tu tiempo y la fidelidad a tu diseño.",
 } as const;
 
