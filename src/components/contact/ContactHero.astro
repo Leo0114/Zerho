@@ -1,0 +1,76 @@
+---
+import { Image } from "astro:assets";
+import Container from "@/components/homeShared/ui/Container.astro";
+import Eyebrow from "@/components/homeShared/ui/Eyebrow.astro";
+import type { ContactInfo } from "@/data/home";
+import { IMAGE_ALT, images } from "@/lib/images";
+import logoImg from "@/assets/firstLogo.png";
+
+interface Props {
+  contact: ContactInfo;
+}
+
+const { contact } = Astro.props;
+---
+
+<section
+  data-surface="dark"
+  class="contact-hero relative isolate flex min-h-[72svh] items-end overflow-clip bg-secondary text-white"
+>
+  <div class="absolute inset-0 -z-20" aria-hidden="true">
+    <Image
+      src={images.contactHero}
+      alt={IMAGE_ALT}
+      widths={[640, 1024, 1600, 2400]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="contact-hero-image h-full w-full object-cover"
+    />
+  </div>
+  <div class="contact-hero-scrim absolute inset-0 -z-10" aria-hidden="true">
+  </div>
+
+  {/* Top Center Logo (Match HeroSlider) */}
+  <div class="absolute top-28 md:top-32 left-1/2 -translate-x-1/2 z-30 pointer-events-none w-40 sm:w-48 md:w-64 aspect-[3/1]">
+    <img 
+      src={logoImg.src} 
+      alt="Zerho"
+      class="w-full h-full object-cover drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] reveal" 
+    />
+  </div>
+
+  <Container class="pb-16 pt-48 sm:pb-20 relative z-10 flex flex-col items-center text-center">
+    <h1
+      class="reveal max-w-4xl font-display text-4xl sm:text-5xl lg:text-6xl font-medium leading-[1] tracking-[-0.02em] text-balance drop-shadow-lg"
+      style="--reveal-delay: 80ms"
+    >
+      {contact.sectionTitle}
+    </h1>
+  </Container>
+</section>
+
+<style>
+  .contact-hero-scrim {
+    background:
+      linear-gradient(180deg, rgb(43 42 38 / 0.5) 0%, rgb(43 42 38 / 0) 30%),
+      linear-gradient(
+        0deg,
+        rgb(43 42 38 / 0.9) 0%,
+        rgb(43 42 38 / 0.4) 55%,
+        rgb(43 42 38 / 0.1) 100%
+      );
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-hero :global(.contact-hero-image) {
+      animation: settle 1800ms var(--ease-out-expo) both;
+    }
+
+    @keyframes settle {
+      from {
+        transform: scale(1.06);
+      }
+    }
+  }
+</style>

@@ -1,10 +1,11 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { PREVENTAS_PATH } from "./navigation";
 
 export type Property = CollectionEntry<"propiedades">;
 
 /**
  * Todas las propiedades publicadas, en el orden editorial definido por
- * `order`. Es el único punto donde se lee la colección: portada, `[slug]`,
+ * `order`. Es el único punto donde se lee la colección: `/preventas`, `[slug]`,
  * cabecera y pie parten siempre de la misma lista.
  */
 export async function getProperties(): Promise<Property[]> {
@@ -16,11 +17,12 @@ export async function getProperties(): Promise<Property[]> {
 }
 
 /**
- * La residencia que abre el sitio.
+ * La residencia que abre las preventas.
  *
  * El contrato es estricto —exactamente una ficha con `featured: true`— porque
  * de él depende que cada residencia tenga una sola URL: la destacada vive en
- * `/` y las demás en `/[slug]`. Si el contrato se rompe, la build falla con un
+ * `/preventas` y las demás en `/preventas/[slug]`. Si el contrato se rompe, la
+ * build falla con un
  * mensaje claro en lugar de publicar contenido duplicado en dos direcciones.
  */
 export async function getFeaturedProperty(): Promise<Property> {
@@ -38,7 +40,7 @@ export async function getFeaturedProperty(): Promise<Property> {
   );
 }
 
-/** Las residencias que se publican bajo `/[slug]`. */
+/** Las residencias que se publican bajo `/preventas/[slug]`. */
 export async function getSecondaryProperties(): Promise<Property[]> {
   const [all, featured] = await Promise.all([
     getProperties(),
@@ -53,9 +55,11 @@ export async function getOtherProperties(current: Property) {
   return all.filter((p) => p.id !== current.id);
 }
 
-/** Una sola URL canónica por residencia: la destacada es la portada. */
+/** Una sola URL canónica por residencia: la destacada abre las preventas. */
 export function propertyHref(property: Property) {
-  return property.data.featured ? "/" : `/${property.id}`;
+  return property.data.featured
+    ? PREVENTAS_PATH
+    : `${PREVENTAS_PATH}/${property.id}`;
 }
 
 /**

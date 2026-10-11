@@ -1,0 +1,61 @@
+---
+import Container from "@/components/homeShared/ui/Container.astro";
+import SectionHeading from "@/components/homeShared/ui/SectionHeading.astro";
+
+const departments = [
+  "Dirección General",
+  "Comercial",
+  "Marketing",
+  "Administración",
+  "Arquitectura",
+  "Interiorismo",
+  "Costos y Presupuestos",
+  "Gerencia de Gestión y Control de proyectos",
+];
+---
+
+<section
+  id="equipo"
+  class="py-28 sm:py-36 lg:py-44 relative overflow-hidden bg-white"
+>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-transparent to-ink/[0.02] pointer-events-none"
+    aria-hidden="true"
+  >
+  </div>
+  <Container>
+    <SectionHeading
+      eyebrow="Conócenos"
+      title="El rostro detrás de la excelencia"
+      align="center"
+      description="Somos una gran familia de más de 30 profesionales apasionados por lo que hacen. Nos organizamos en áreas especializadas, trabajando codo a codo en un ambiente cálido y de respeto mutuo, para asegurar que cada detalle de tu proyecto se cuide con cariño, dedicación y las mejores prácticas del mercado."
+      class="mb-16 sm:mb-24"
+    />
+
+    <div
+      class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mx-auto max-w-6xl"
+    >
+      {
+        departments.map((dept, i) => (
+          <article
+            class="reveal group relative flex items-center justify-center p-6 sm:p-8 text-center rounded-[2rem] bg-white transition-all duration-500 hover:-translate-y-1"
+            style={`--reveal-delay: ${i * 40}ms`}
+          >
+            <div class="absolute inset-0 rounded-[2rem] shadow-[0_8px_30px_rgba(43,42,38,0.04)] group-hover:shadow-[0_20px_40px_rgba(43,42,38,0.08)] transition-shadow duration-500 ease-out" />
+            <div class="absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-ink/[0.04]" />
+
+            <h3 class="relative z-10 font-display text-[1.125rem] font-medium leading-snug text-ink text-balance duration-500 ease-in-out transition-all group-hover:scale-[1.02]">
+              {dept}
+            </h3>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  article {
+    min-height: 140px;
+  }
+</style>

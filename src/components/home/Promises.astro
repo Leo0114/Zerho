@@ -1,0 +1,275 @@
+---
+import { Image } from "astro:assets";
+import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import Container from "@/components/homeShared/ui/Container.astro";
+import SectionHeading from "@/components/homeShared/ui/SectionHeading.astro";
+import type { CommercialPhrase } from "@/data/home";
+import { images } from "@/lib/images";
+
+/**
+ * La primera frase es la promesa (abre la sección); el resto son sus
+ * pruebas, en un carrusel nativo: scroll-snap con la inercia del sistema,
+ * arrastrable con el dedo y navegable con flechas o teclado.
+ */
+interface Props {
+  phrases: readonly CommercialPhrase[];
+}
+
+const [lead, ...proofs] = Astro.props.phrases;
+---
+
+<section
+  id="promesa"
+  data-surface="dark"
+  class="promises relative isolate overflow-hidden bg-primary py-28 text-white sm:py-36"
+>
+  <div class="absolute inset-0 -z-20" aria-hidden="true">
+    <Image
+      src={images.promise}
+      alt=""
+      widths={[640, 1280, 1920]}
+      sizes="100vw"
+      class="h-full w-full scale-110 object-cover blur-2xl"
+    />
+  </div>
+  <div class="promises-tint absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <Container class="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+    {lead && (
+      <SectionHeading
+        eyebrow="Nuestra promesa"
+        title={lead.title}
+        description={lead.copy}
+        tone="dark"
+      />
+    )}
+
+    <div class="reveal hidden gap-2 lg:flex" data-carousel-controls>
+      <button type="button" class="arrow" data-dir="-1" aria-label="Anterior" disabled>
+        <LuChevronLeft aria-hidden="true" />
+      </button>
+      <button type="button" class="arrow" data-dir="1" aria-label="Siguiente">
+        <LuChevronRight aria-hidden="true" />
+      </button>
+    </div>
+  </Container>
+
+  <div class="reveal mt-14 sm:mt-16" style="--reveal-delay: 120ms">
+    <ol class="track" data-carousel-track tabindex="0" aria-label="Lo que garantizamos">
+      {
+        proofs.map((proof, i) => (
+          <li class="card">
+            <span class="card-index">{String(i + 1).padStart(2, "0")}</span>
+            <h3 class="card-title">{proof.title}</h3>
+            <p class="card-copy">{proof.copy}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .promises-tint {
+    background:
+      radial-gradient(60% 50% at 85% 10%, rgb(147 119 74 / 0.35), transparent 70%),
+      linear-gradient(180deg, rgb(51 58 48 / 0.82), rgb(43 42 38 / 0.9));
+  }
+
+  /* --- Carrusel ----------------------------------------------------------
+     El primer y el último elemento se alinean con el contenedor de la
+     página; el resto asoma por el borde para invitar a deslizar. */
+  .track {
+    --gutter: max(1.25rem, calc((100vw - 80rem) / 2 + 1.25rem));
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(82vw, 22rem);
+    gap: 1rem;
+    padding-inline: var(--gutter);
+    padding-block: 0.5rem 1.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    outline-offset: -2px;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .track {
+      --gutter: max(2rem, calc((100vw - 80rem) / 2 + 2rem));
+      gap: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .track {
+      --gutter: max(3rem, calc((100vw - 80rem) / 2 + 3rem));
+      grid-auto-columns: 24rem;
+    }
+  }
+
+  /* --- Tarjeta de cristal -------------------------------------------------- */
+  .card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    min-height: 19rem;
+    padding: 1.75rem;
+    border-radius: 1.75rem;
+    scroll-snap-align: start;
+    background: var(--glass-dark-bg);
+    border: 1px solid var(--glass-dark-border);
+    box-shadow:
+      inset 0 1px 0 var(--glass-dark-highlight),
+      0 20px 50px -20px rgb(0 0 0 / 0.45);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    transition: transform 600ms var(--ease-spring), border-color 400ms ease-out;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0) 45%);
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgb(255 255 255 / 0.35);
+    }
+  }
+
+  .card-index {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-coolGray);
+  }
+
+  .card-title {
+    margin-top: auto;
+    padding-top: 3rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .card-copy {
+    margin-top: 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: rgb(233 225 209 / 0.78);
+    text-wrap: pretty;
+  }
+
+  /* --- Flechas ------------------------------------------------------------- */
+  .arrow {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    font-size: 1.25rem;
+    color: #fff;
+    cursor: pointer;
+    background: var(--glass-dark-bg);
+    border: 1px solid var(--glass-dark-border);
+    box-shadow: inset 0 1px 0 var(--glass-dark-highlight);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    transition:
+      transform 400ms var(--ease-spring),
+      opacity 300ms ease-out,
+      background-color 300ms ease-out;
+  }
+
+  .arrow:hover {
+    background-color: rgb(255 255 255 / 0.18);
+  }
+
+  .arrow:active {
+    transform: scale(0.92);
+    transition-duration: 100ms;
+  }
+
+  .arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  let cleanup: (() => void) | null = null;
+
+  function initCarousel() {
+    cleanup?.();
+
+    const track = document.querySelector<HTMLElement>("[data-carousel-track]");
+    const buttons = document.querySelectorAll<HTMLButtonElement>(
+      "[data-carousel-controls] button",
+    );
+    if (!track || !buttons.length) return;
+
+    const step = () => {
+      const card = track.querySelector<HTMLElement>("li");
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return card ? card.offsetWidth + gap : track.clientWidth * 0.8;
+    };
+
+    let frame = 0;
+    const sync = () => {
+      frame = 0;
+      const max = track.scrollWidth - track.clientWidth - 2;
+      buttons.forEach((button) => {
+        const dir = Number(button.dataset.dir);
+        button.disabled = dir < 0 ? track.scrollLeft <= 2 : track.scrollLeft >= max;
+      });
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(sync);
+    };
+
+    const onClick = (event: Event) => {
+      const dir = Number((event.currentTarget as HTMLElement).dataset.dir);
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      track.scrollBy({ left: dir * step(), behavior: reduced ? "auto" : "smooth" });
+    };
+
+    track.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    buttons.forEach((button) => button.addEventListener("click", onClick));
+    sync();
+
+    cleanup = () => {
+      track.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      buttons.forEach((button) => button.removeEventListener("click", onClick));
+      cancelAnimationFrame(frame);
+      cleanup = null;
+    };
+  }
+
+  document.addEventListener("astro:page-load", initCarousel);
+  document.addEventListener("astro:before-swap", () => cleanup?.());
+</script>

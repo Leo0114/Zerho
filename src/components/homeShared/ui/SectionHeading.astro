@@ -1,0 +1,58 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+
+/**
+ * Apertura común de sección: antetítulo, título display y entradilla.
+ * Jerarquía por tamaño + peso + interlineado como conjunto: titular con
+ * interlineado cerrado y tracking negativo, cuerpo holgado y a tracking 0.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  tone?: "light" | "dark";
+  align?: "start" | "center";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  tone = "light",
+  align = "start",
+  class: className,
+} = Astro.props;
+
+const isDark = tone === "dark";
+const centered = align === "center";
+---
+
+<header class:list={["reveal max-w-3xl", centered && "mx-auto text-center", className]}>
+  {eyebrow && <Eyebrow tone={tone} align={align}>{eyebrow}</Eyebrow>}
+
+  <h2
+    class:list={[
+      "mt-6 font-display text-[clamp(2.25rem,4.6vw,3.75rem)] font-medium leading-[1.04] tracking-[-0.015em] text-balance",
+      isDark ? "text-white" : "text-ink",
+    ]}
+  >
+    {title}
+  </h2>
+
+  {
+    description && (
+      <p
+        class:list={[
+          "mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-pretty",
+          centered && "mx-auto",
+          isDark ? "text-darkGray/75" : "text-muted",
+        ]}
+      >
+        {description}
+      </p>
+    )
+  }
+
+  <slot />
+</header>

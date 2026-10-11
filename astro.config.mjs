@@ -8,10 +8,18 @@ import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import icon from "astro-icon";
 
-// El sitio es monolingüe (es-MX) y se compone únicamente de las fichas de
-// propiedad: la portada monta la residencia destacada y `[slug]` el resto.
+// El sitio es monolingüe (es-MX) y une dos frentes de la misma marca: el
+// estudio (`/`, `/contact`) y las preventas (`/preventas` monta la residencia
+// destacada y `/preventas/[slug]` el resto).
 export default defineConfig({
   site: "https://zerho.mx",
+
+  // Direcciones publicadas antes de la unión, cuando las fichas colgaban de
+  // la raíz. La destacada vivía en `/`, que ahora es la portada del estudio.
+  redirects: {
+    "/encinos-11": "/preventas/encinos-11",
+    "/balcones-del-campestre": "/preventas/balcones-del-campestre",
+  },
 
   output: "server",
   adapter: netlify({

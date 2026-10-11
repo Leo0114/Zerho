@@ -1,0 +1,58 @@
+---
+import { ClientRouter } from "astro:transitions";
+import { SEO } from "astro-seo";
+
+/**
+ * Lo que comparten el estudio (HomeLayout) y las preventas (PreventasLayout):
+ * metadatos, SEO y el router de transiciones. Cada layout aporta su propia
+ * hoja de estilos, su cabecera y su pie; aquí no entra nada visual.
+ */
+interface Props {
+  title: string;
+  description: string;
+  /** Imagen social ya resuelta (ruta o URL). Por defecto, el isotipo. */
+  image?: string;
+  keywords?: readonly string[];
+}
+
+const SITE_NAME = "Zerho Arquitectura";
+
+const { title, description, image = "/ico.png", keywords } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const socialImage = new URL(image, Astro.site).href;
+---
+
+<meta name="generator" content={Astro.generator} />
+<meta name="theme-color" content="#333a30" />
+<link rel="icon" type="image/png" href="/ico.png" />
+
+<SEO
+  title={title}
+  description={description}
+  canonical={canonical}
+  openGraph={{
+    basic: { title, type: "website", image: socialImage, url: canonical },
+    optional: { description, locale: "es_MX", siteName: SITE_NAME },
+  }}
+  twitter={{ card: "summary_large_image", title, description }}
+  extend={{
+    meta: keywords?.length
+      ? [{ name: "keywords", content: keywords.join(", ") }]
+      : [],
+  }}
+/>
+
+<!--
+  Marca el documento como "con JavaScript" antes del primer pintado: los
+  `.reveal` se ocultan sin parpadeo y, sin JS, se quedan visibles. El
+  ClientRouter reemplaza los atributos de <html> al navegar, así que la clase
+  se vuelve a poner tras cada intercambio.
+-->
+<script is:inline>
+  document.documentElement.classList.add("js");
+  document.addEventListener("astro:after-swap", () =>
+    document.documentElement.classList.add("js"),
+  );
+</script>
+
+<ClientRouter fallback="swap" />

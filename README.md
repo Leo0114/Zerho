@@ -1,36 +1,61 @@
 # Zerho — Arquitectura Extraordinaria
 
-Sitio de residencias de Zerho. No tiene páginas institucionales: **el sitio son
-las fichas de propiedad**. La destacada abre en `/` y las demás cuelgan de
-`/[slug]`. Monolingüe (`es-MX`).
+Un solo sitio para dos frentes de la misma marca. Monolingüe (`es-MX`).
+
+| Frente        | Rutas                              | Layout            | Estilos               |
+| ------------- | ---------------------------------- | ----------------- | --------------------- |
+| **Estudio**   | `/`, `/contact`                    | `HomeLayout`      | `styles/newIndex.css` |
+| **Preventas** | `/preventas`, `/preventas/[slug]`  | `PreventasLayout` | `styles/global.css`   |
+
+Cada frente conserva su propio sistema de diseño. Varios tokens comparten
+nombre con valores distintos (`--color-accent`, `--color-canvas`,
+`--font-display`…), así que **cada layout importa una sola hoja** y nunca se
+mezclan: Astro empaqueta el CSS por página y el `ClientRouter` cambia las hojas
+al navegar entre un frente y otro. No importar `global.css` desde el estudio ni
+`newIndex.css` desde las preventas.
 
 ## Cómo está organizado
 
 ```text
 src/
-├── content/propiedades/        # ← las tres fichas. Una propiedad = un .md
-│   ├── encinos-8.md            #   featured: true → se publica en /
-│   ├── balcones-del-campestre.md
-│   └── sierra-alta-24.md
+├── content/propiedades/        # las fichas. Una propiedad = un .md
 ├── content.config.ts           # esquema Zod de la colección `propiedades`
-├── data/site.ts                # marca, contacto, compromisos, garantía, secciones
+├── data/
+│   ├── site.ts                 # marca, contacto, redes (SOCIAL_LINKS), compromisos
+│   └── home.ts                 # textos de la portada y de contacto
 ├── lib/
+│   ├── navigation.ts           # rutas (PREVENTAS_PATH, CONTACT_PATH) y secciones del home
 │   ├── properties.ts           # acceso a la colección, URLs canónicas, precios
 │   └── gallery.ts              # descubrimiento de imágenes por carpeta
+├── assets/
+│   ├── homeAssets/             # imágenes del estudio
+│   └── images/                 # imágenes de las preventas
 ├── components/
-│   ├── property/PropertyView   # el único montaje de ficha (portada y [slug])
-│   ├── shared/                 # secciones y piezas reutilizables
-│   └── ui/                     # Button, Icon
-├── layouts/Layout.astro        # <head>, SEO, cabecera, pie
-├── scripts/indicator.ts        # indicador con muelle (nav y control de planos)
-├── styles/global.css           # sistema de diseño completo (tokens + utilidades)
-└── pages/                      # index · [slug] · 404
+│   ├── home/ · contact/        # secciones del estudio
+│   ├── homeShared/             # Navbar, Footer, SmoothScroll y ui/ del estudio
+│   ├── property/PropertyView   # el único montaje de ficha
+│   ├── shared/                 # piezas de las preventas (+ ScrollReveal, común)
+│   └── ui/                     # Button, Icon, Modal de las preventas
+├── layouts/
+│   ├── BaseHead.astro          # <head> común: SEO, favicon, ClientRouter
+│   ├── HomeLayout.astro
+│   └── PreventasLayout.astro
+├── styles/                     # una hoja por frente (ver tabla)
+└── pages/                      # index · contact · preventas/ · api/contact · 404
 ```
+
+Los scripts de componente sobreviven a las navegaciones del `ClientRouter`:
+si un script sólo debe actuar en un frente, que compruebe un elemento propio de
+ese frente (ver `SmoothScroll.astro`, o los ids `#site-header` /
+`#preventas-header`).
+
+El formulario de contacto (`/api/contact`) necesita `RESEND_API_KEY` y, de
+forma opcional, `CONTACT_TO` y `CONTACT_FROM`.
 
 ## Añadir o editar una propiedad
 
 1. Crear un `.md` en `src/content/propiedades/`. El nombre del archivo es el
-   slug (`balcones-del-campestre.md` → `/balcones-del-campestre`).
+   slug (`balcones-del-campestre.md` → `/preventas/balcones-del-campestre`).
 2. Rellenar el frontmatter siguiendo el esquema de `src/content.config.ts`. El
    esquema es estricto: si falta un campo o cambia un tipo, la build falla con
    el error señalado.
@@ -39,7 +64,7 @@ src/
 
 ### Reglas de contenido
 
-- **Exactamente una** ficha lleva `featured: true`. Esa es la portada y **no**
+- **Exactamente una** ficha lleva `featured: true`. Esa abre `/preventas` y **no**
   se publica además bajo su slug: una sola URL canónica por residencia. Si hay
   cero o más de una, la build se detiene con un mensaje explícito.
 - `order` define el orden en cabecera, pie y bloque de "otras residencias".
@@ -50,7 +75,7 @@ src/
 
 ## Sistema de diseño
 
-Todo el color, la tipografía, la elevación y el ritmo viven en `@theme` dentro
+Preventas: todo el color, la tipografía, la elevación y el ritmo viven en `@theme` dentro
 de `src/styles/global.css`. Ningún componente escribe un hex: consumen tokens
 (`bg-primary`, `text-accent-deep`, `rounded-panel`, `shadow-e2`, `type-title`).
 

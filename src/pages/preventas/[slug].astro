@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from "astro";
-import Layout from "@/layouts/Layout.astro";
+import Layout from "@/layouts/PreventasLayout.astro";
 import PropertyView from "@/components/property/PropertyView.astro";
 import { getSecondaryProperties, type Property } from "@/lib/properties";
 
@@ -8,7 +8,7 @@ export const prerender = true;
 
 /**
  * Una ruta por residencia no destacada. La destacada queda fuera a propósito:
- * vive en `/` y no debe existir también aquí.
+ * vive en `/preventas` y no debe existir también aquí.
  */
 export const getStaticPaths = (async () => {
   const properties = await getSecondaryProperties();

@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark,.dark *));
+
+/* `static`: las variables se emiten siempre en :root, así los <style> de
+   cada componente pueden leerlas con var(--color-*) además de las utilidades. */
+@theme static {
+  --color-primary: #333a30;
+  --color-secondary: #2b2a26;
+  --color-secondary-dark: #2b2a26;
+  --color-accent: #000000;
+  --color-warmGray: #93774a;
+  --color-coolGray: #c2b6aa;
+  --color-darkGray: #e9e1d1;
+
+  /* Semánticos derivados de la paleta */
+  --color-canvas: #f4efe6;
+  --color-ink: #2b2a26;
+  --color-muted: #6e6a60;
+
+  --font-sans:
+    system-ui, -apple-system, "SF Pro Text", "Segoe UI", Roboto,
+    "Helvetica Neue", sans-serif;
+  --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
+
+  /* Curvas: salida exponencial (asentamiento suave, sin rebote) y la curva
+     de hojas de iOS, equivalente a un muelle críticamente amortiguado. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* --- Material: liquid glass ------------------------------------------------
+   Sólo tokens. Cada componente compone su propio cristal con ellos. */
+:root {
+  --header-h: 5rem;
+
+  --glass-blur: 22px;
+  --glass-saturate: 180%;
+
+  /* Cristal sobre imagen u oliva */
+  --glass-dark-bg: rgb(255 255 255 / 0.1);
+  --glass-dark-border: rgb(255 255 255 / 0.22);
+  --glass-dark-highlight: rgb(255 255 255 / 0.4);
+
+  /* Cristal sobre el lienzo crema */
+  --glass-light-bg: rgb(255 255 255 / 0.55);
+  --glass-light-border: rgb(255 255 255 / 0.8);
+  --glass-light-highlight: rgb(255 255 255 / 0.95);
+
+  --glass-shadow:
+    0 1px 2px rgb(43 42 38 / 0.06), 0 12px 40px -12px rgb(43 42 38 / 0.28);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-blur: 0px;
+    --glass-dark-bg: rgb(51 58 48 / 0.94);
+    --glass-light-bg: rgb(250 247 242 / 0.97);
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --glass-dark-border: rgb(255 255 255 / 0.7);
+    --glass-light-border: rgb(43 42 38 / 0.5);
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-darkGray);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-warmGray);
+    outline-offset: 3px;
+  }
+}
+
+/* --- Revelado al scroll ------------------------------------------------------
+   Llega como un material: opacidad, desplazamiento corto y desenfoque a la
+   vez, con salida exponencial — sin rebote, nada que distraiga. `.js` lo pone
+   BaseHead antes del primer pintado; el observador es ScrollReveal.astro.
+   Escalonado: `style="--reveal-delay: 80ms"` en el elemento. */
+.js .reveal {
+  opacity: 0;
+  transform: translate3d(0, 1.75rem, 0);
+  filter: blur(8px);
+  transition:
+    opacity 900ms var(--ease-out-expo),
+    transform 1100ms var(--ease-out-expo),
+    filter 900ms var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js .reveal[data-revealed] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    transform: none;
+    filter: none;
+    transition: opacity 400ms linear;
+  }
+}

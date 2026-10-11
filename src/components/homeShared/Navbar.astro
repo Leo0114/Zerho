@@ -1,0 +1,424 @@
+---
+import { Image } from "astro:assets";
+import { LuMenu } from "react-icons/lu";
+import firstLogo from "@/assets/firstLogo.png";
+import scrollLogo from "@/assets/scrollLogo.png";
+import { HOME_SECTIONS, SITE_PAGES, sectionHref } from "@/lib/navigation";
+
+/**
+ * Barra flotante de liquid glass. Su tono sigue a lo que pasa por debajo:
+ * sobre imagen u oliva (`data-surface="dark"`) es cristal oscuro con el logo
+ * blanco; sobre el lienzo crema, cristal claro con el logo pistache.
+ */
+const { pathname } = Astro.url;
+
+// Los PNG de marca son cuadrados con mucho aire: la caja 3:1 con
+// `object-cover` recorta ese aire. `width` evita servir el original de 8K.
+const LOGO = {
+  width: 480,
+  height: 480,
+  widths: [240, 480],
+  sizes: "8rem",
+  loading: "eager",
+  alt: "",
+} as const;
+---
+
+<header id="site-header" data-tone="dark" class="site-header">
+  <div class="bar">
+    <a href="/" class="brand" aria-label="Zerho Arquitectura — inicio">
+      <Image src={firstLogo} class="brand-logo brand-logo--white" {...LOGO} />
+      <Image src={scrollLogo} class="brand-logo brand-logo--pistache" {...LOGO} />
+    </a>
+
+    <nav aria-label="Principal" class="nav">
+      <ul>
+        {
+          HOME_SECTIONS.map((item) => (
+            <li>
+              <a href={sectionHref(item.id, pathname)} class="nav-link">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        {
+          SITE_PAGES.map((page) => (
+            <li>
+              <a
+                href={page.path}
+                class="nav-link"
+                aria-current={pathname.startsWith(page.path) ? "page" : undefined}
+              >
+                {page.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <button
+        type="button"
+        class="menu-btn"
+        popovertarget="site-menu"
+        aria-label="Abrir menú"
+      >
+        <LuMenu aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Nace de su disparador: escala desde la esquina superior derecha. -->
+  <div id="site-menu" popover class="menu">
+    <nav aria-label="Menú">
+      <ul>
+        {
+          HOME_SECTIONS.map((item) => (
+            <li>
+              <a href={sectionHref(item.id, pathname)} class="menu-link">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        {
+          SITE_PAGES.map((page) => (
+            <li>
+              <a href={page.path} class="menu-link">{page.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 50;
+    padding: 0.75rem 0.75rem 0;
+    pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    .site-header {
+      padding: 1rem 1.5rem 0;
+    }
+  }
+
+  /* --- Material ----------------------------------------------------------- */
+  .bar {
+    position: relative;
+    isolation: isolate;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 72rem;
+    height: 3.5rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem 0.375rem;
+    border-radius: 9999px;
+    color: #fff;
+    background: var(--glass-dark-bg);
+    border: 1px solid var(--glass-dark-border);
+    box-shadow:
+      inset 0 1px 0 var(--glass-dark-highlight),
+      var(--glass-shadow);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    transition:
+      color 500ms var(--ease-out-expo),
+      background-color 500ms var(--ease-out-expo),
+      border-color 500ms var(--ease-out-expo),
+      box-shadow 500ms var(--ease-out-expo);
+  }
+
+  /* Brillo especular: la luz que incide desde arriba sobre el cristal. */
+  .bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.16),
+      rgb(255 255 255 / 0) 55%
+    );
+    pointer-events: none;
+  }
+
+  .site-header[data-tone="light"] .bar {
+    color: var(--color-ink);
+    background: var(--glass-light-bg);
+    border-color: var(--glass-light-border);
+    box-shadow:
+      inset 0 1px 0 var(--glass-light-highlight),
+      var(--glass-shadow);
+  }
+
+  /* --- Marca -------------------------------------------------------------- */
+  .brand {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 7.25rem;
+    aspect-ratio: 3 / 1;
+    transition: opacity 150ms ease-out;
+  }
+
+  .brand:active {
+    opacity: 0.7;
+  }
+
+  .brand :global(.brand-logo) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 500ms var(--ease-out-expo);
+  }
+
+  .site-header[data-tone="dark"] .brand :global(.brand-logo--pistache),
+  .site-header[data-tone="light"] .brand :global(.brand-logo--white) {
+    opacity: 0;
+  }
+
+  /* --- Navegación --------------------------------------------------------- */
+  .nav {
+    display: none;
+    margin-inline: auto;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    height: 2.5rem;
+    padding-inline: 0.9rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    opacity: 0.78;
+    transition:
+      opacity 300ms var(--ease-out-expo),
+      background-color 300ms var(--ease-out-expo),
+      transform 400ms var(--ease-spring);
+  }
+
+  .nav-link:hover {
+    opacity: 1;
+    background-color: rgb(255 255 255 / 0.12);
+  }
+
+  .site-header[data-tone="light"] .nav-link:hover {
+    background-color: rgb(43 42 38 / 0.06);
+  }
+
+  .nav-link:active {
+    transform: scale(0.96);
+    transition-duration: 100ms;
+  }
+
+  @media (min-width: 768px) {
+    .nav {
+      display: block;
+    }
+  }
+
+  /* --- Acciones ----------------------------------------------------------- */
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-left: auto;
+  }
+
+  @media (min-width: 768px) {
+    .actions {
+      margin-left: 0;
+    }
+  }
+
+  .menu-btn {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition:
+      background-color 300ms var(--ease-out-expo),
+      transform 400ms var(--ease-spring);
+  }
+
+  .menu-btn:hover {
+    background-color: rgb(255 255 255 / 0.12);
+  }
+
+  .site-header[data-tone="light"] .menu-btn:hover {
+    background-color: rgb(43 42 38 / 0.06);
+  }
+
+  .menu-btn:active {
+    transform: scale(0.92);
+    transition-duration: 100ms;
+  }
+
+  @media (min-width: 768px) {
+    .menu-btn {
+      display: none;
+    }
+  }
+
+  /* --- Menú móvil: se materializa (escala + desenfoque) ------------------- */
+  .menu {
+    position: fixed;
+    inset: auto 0.75rem auto auto;
+    top: calc(0.75rem + 3.5rem + 0.5rem);
+    width: min(16rem, calc(100vw - 1.5rem));
+    margin: 0;
+    padding: 0.375rem;
+    border-radius: 1.5rem;
+    color: var(--color-ink);
+    background: rgb(250 247 242 / 0.78);
+    border: 1px solid var(--glass-light-border);
+    box-shadow:
+      inset 0 1px 0 var(--glass-light-highlight),
+      0 24px 60px -16px rgb(43 42 38 / 0.4);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    transform-origin: top right;
+    opacity: 0;
+    transform: scale(0.92) translateY(-6px);
+    filter: blur(8px);
+    transition:
+      opacity 280ms var(--ease-out-expo),
+      transform 450ms var(--ease-spring),
+      filter 280ms var(--ease-out-expo),
+      overlay 450ms allow-discrete,
+      display 450ms allow-discrete;
+  }
+
+  .menu:popover-open {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  @starting-style {
+    .menu:popover-open {
+      opacity: 0;
+      transform: scale(0.92) translateY(-6px);
+      filter: blur(8px);
+    }
+  }
+
+  .menu-link {
+    display: block;
+    padding: 0.85rem 1rem;
+    border-radius: 1.1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    transition:
+      background-color 200ms ease-out,
+      transform 400ms var(--ease-spring);
+  }
+
+  .menu-link:hover {
+    background-color: rgb(43 42 38 / 0.06);
+  }
+
+  .menu-link:active {
+    transform: scale(0.98);
+    transition-duration: 100ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu {
+      transform: none;
+      filter: none;
+    }
+
+    @starting-style {
+      .menu:popover-open {
+        transform: none;
+        filter: none;
+      }
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .menu {
+      background: var(--color-canvas);
+    }
+  }
+</style>
+
+<script>
+  let cleanup: (() => void) | null = null;
+
+  function initHeader() {
+    cleanup?.();
+
+    const header = document.getElementById("site-header");
+    const bar = header?.querySelector<HTMLElement>(".bar");
+    if (!header || !bar) return;
+
+    const darkSurfaces = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-surface="dark"]'),
+    );
+
+    // ¿Qué hay justo debajo del centro de la barra? Cuatro o cinco
+    // secciones: medir en cada frame de scroll es barato.
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const { top, height } = bar.getBoundingClientRect();
+      const probe = top + height / 2;
+      const overDark = darkSurfaces.some((el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top <= probe && rect.bottom >= probe;
+      });
+      header.dataset.tone = overDark ? "dark" : "light";
+    };
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    update();
+
+    // Elegir un destino cierra el menú.
+    const menu = document.getElementById("site-menu");
+    const closeMenu = () => menu?.hidePopover();
+    const menuLinks = menu?.querySelectorAll("a") ?? [];
+    menuLinks.forEach((link) => link.addEventListener("click", closeMenu));
+
+    cleanup = () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(frame);
+      menuLinks.forEach((link) => link.removeEventListener("click", closeMenu));
+      cleanup = null;
+    };
+  }
+
+  document.addEventListener("astro:page-load", initHeader);
+  document.addEventListener("astro:before-swap", () => cleanup?.());
+</script>

@@ -1,0 +1,25 @@
+---
+import Layout from "@/layouts/PreventasLayout.astro";
+import PropertyView from "@/components/property/PropertyView.astro";
+import { getFeaturedProperty } from "@/lib/properties";
+
+export const prerender = true;
+
+/**
+ * La entrada a preventas no es un escaparate: es la residencia destacada.
+ * Quien llega a /preventas entra directamente en Encinos 8, y las otras dos
+ * quedan a un clic desde la cabecera, el bloque previo al pie y el pie.
+ */
+const property = await getFeaturedProperty();
+const { data } = property;
+---
+
+<Layout
+  title={data.seo?.title ?? `${data.title} — ${data.location}`}
+  description={data.seo?.description ?? data.excerpt}
+  image={data.cover}
+  propertyTitle={data.title}
+  currentId={property.id}
+>
+  <PropertyView property={property} />
+</Layout>

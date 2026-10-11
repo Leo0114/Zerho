@@ -25,8 +25,34 @@ export const SITE = {
   phoneHref: "528120253696",
   whatsapp: "528120253696",
   city: "San Pedro Garza García, Nuevo León",
-  instagram: "https://www.instagram.com/",
 } as const;
+
+/**
+ * Redes de la marca. Única fuente para el estudio y las preventas: cada pie
+ * las pinta con su propio set de iconos, emparejándolos por `id`.
+ */
+export const SOCIAL_LINKS = [
+  {
+    id: "instagram",
+    label: "Instagram",
+    handle: "@zerhoarquitectura",
+    href: "https://www.instagram.com/zerhoarquitectura?dlrf=MWw3d2NzejBibGUyYQ==",
+  },
+  {
+    id: "facebook",
+    label: "Facebook",
+    handle: "Zerho Arquitectura",
+    href: "https://www.facebook.com/share/14sB1u9zWrr/?mibextid=wwXIfr",
+  },
+  {
+    id: "linkedin",
+    label: "LinkedIn",
+    handle: "Zerho Arquitectura",
+    href: "https://www.linkedin.com/company/zerhoarquitectura/",
+  },
+] as const;
+
+export type SocialId = (typeof SOCIAL_LINKS)[number]["id"];
 
 /**
  * Navegación del sitio: es una sola página larga por propiedad.

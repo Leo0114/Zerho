@@ -1,0 +1,171 @@
+---
+import { Image } from "astro:assets";
+import { LuArrowRight, LuChevronDown } from "react-icons/lu";
+import { Button } from "@/components/homeShared/ui/Button";
+import Container from "@/components/homeShared/ui/Container.astro";
+import Eyebrow from "@/components/homeShared/ui/Eyebrow.astro";
+import type { HomeData } from "@/data/home";
+import { IMAGE_ALT, images } from "@/lib/images";
+import { CONTACT_PATH } from "@/lib/navigation";
+
+interface Props {
+  hero: HomeData["hero"];
+}
+
+const { hero } = Astro.props;
+---
+
+<section
+  id="inicio"
+  data-surface="dark"
+  class="hero relative isolate flex min-h-svh items-end overflow-clip bg-secondary text-white"
+>
+  <div class="hero-media absolute inset-0 -z-20" aria-hidden="true">
+    <Image
+      src={images.hero}
+      alt={IMAGE_ALT}
+      widths={[640, 1024, 1600, 2400]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="hero-image h-full w-full object-cover"
+    />
+  </div>
+  <div class="hero-scrim absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <Container class="hero-content pb-24 pt-36 sm:pb-28 lg:pb-32">
+    <Eyebrow tone="dark" class="reveal">{hero.preTitle}</Eyebrow>
+
+    <h1
+      class="reveal mt-7 max-w-4xl font-display text-[clamp(2.75rem,7.2vw,6.25rem)] font-medium leading-[0.98] tracking-[-0.022em] text-balance"
+      style="--reveal-delay: 80ms"
+    >
+      {hero.title}
+    </h1>
+
+    <div
+      class="reveal mt-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8"
+      style="--reveal-delay: 160ms"
+    >
+      <Button
+        href={CONTACT_PATH}
+        variant="light"
+        size="lg"
+        icon={LuArrowRight}
+        iconPosition="end"
+      >
+        {hero.ctaPrimary}
+      </Button>
+
+      <!-- <ul class="flex flex-wrap gap-2" aria-label="Especialidades">
+        {hero.specialties.map((specialty) => <li class="chip">{specialty}</li>)}
+      </ul> -->
+    </div>
+  </Container>
+
+  <a href="#filosofia" class="scroll-cue" aria-label="Seguir leyendo">
+    <LuChevronDown aria-hidden="true" />
+  </a>
+</section>
+
+<style>
+  .hero-scrim {
+    background:
+      linear-gradient(180deg, rgb(43 42 38 / 0.45) 0%, rgb(43 42 38 / 0) 28%),
+      linear-gradient(
+        0deg,
+        rgb(43 42 38 / 0.85) 0%,
+        rgb(43 42 38 / 0.35) 45%,
+        rgb(43 42 38 / 0) 75%
+      );
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 2.25rem;
+    padding-inline: 1rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: #fff;
+    background: var(--glass-dark-bg);
+    border: 1px solid var(--glass-dark-border);
+    box-shadow: inset 0 1px 0 var(--glass-dark-highlight);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur))
+      saturate(var(--glass-saturate));
+  }
+
+  .scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-left: -1.375rem;
+    border-radius: 9999px;
+    color: rgb(255 255 255 / 0.85);
+    border: 1px solid var(--glass-dark-border);
+    background: var(--glass-dark-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition:
+      transform 400ms var(--ease-spring),
+      color 300ms ease-out;
+  }
+
+  .scroll-cue:hover {
+    color: #fff;
+  }
+
+  .scroll-cue:active {
+    transform: scale(0.92);
+    transition-duration: 100ms;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Al cargar, la fotografía se asienta: de 1.06 a 1, sin rebote. */
+    .hero :global(.hero-image) {
+      animation: hero-settle 1800ms var(--ease-out-expo) both;
+    }
+
+    @keyframes hero-settle {
+      from {
+        transform: scale(1.06);
+      }
+    }
+
+    /* Al salir, la imagen va más lenta que el contenido (profundidad) y el
+       texto se desvanece. Scroll-driven: corre en el compositor, sin JS. */
+    @supports (animation-timeline: view()) {
+      .hero-media {
+        animation: hero-drift linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 100%;
+      }
+
+      .hero :global(.hero-content) {
+        animation: hero-fade linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 80%;
+      }
+
+      @keyframes hero-drift {
+        to {
+          transform: translate3d(0, 18%, 0);
+        }
+      }
+
+      @keyframes hero-fade {
+        to {
+          opacity: 0;
+          transform: translate3d(0, -2.5rem, 0);
+        }
+      }
+    }
+  }
+</style>

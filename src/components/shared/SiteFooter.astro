@@ -1,6 +1,12 @@
 ---
 import { Image } from "astro:assets";
-import { SITE, SECTIONS, mailHref, whatsappHref } from "@/data/site";
+import {
+  SITE,
+  SECTIONS,
+  SOCIAL_LINKS,
+  mailHref,
+  whatsappHref,
+} from "@/data/site";
 import Icon from "@/components/ui/Icon.astro";
 import firstLogo from "@/assets/firstLogo.png";
 
@@ -44,17 +50,21 @@ const year = new Date().getFullYear();
         </div>
 
         <div class="mt-10 flex flex-wrap items-center gap-5 text-on-primary/60">
-          <a href="#" class="hover:text-on-primary transition-colors" aria-label="Instagram">
-            <Icon name="instagram" class="h-5 w-5" />
-          </a>
-          <a href="#" class="hover:text-on-primary transition-colors" aria-label="LinkedIn">
-            <Icon name="linkedin" class="h-5 w-5" />
-          </a>
-          <a href="#" class="hover:text-on-primary transition-colors" aria-label="Facebook">
-            <Icon name="facebook" class="h-5 w-5" />
-          </a>
+          {
+            SOCIAL_LINKS.map(({ id, label, href }) => (
+              <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-on-primary transition-colors"
+                aria-label={label}
+              >
+                <Icon name={id} class="h-5 w-5" />
+              </a>
+            ))
+          }
           <div class="w-px h-5 bg-white/20"></div>
-          <a href="#" class="hover:text-on-primary transition-colors text-[0.9rem]">
+          <a href="/" class="hover:text-on-primary transition-colors text-[0.9rem]">
             Zerho.mx
           </a>
         </div>

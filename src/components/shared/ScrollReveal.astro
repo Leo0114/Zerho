@@ -2,9 +2,11 @@
 /**
  * Drives every `.reveal` element on the page.
  *
- * The `js` class is added by the blocking script in Layout.astro, so elements
+ * The `js` class is added by the blocking script in BaseHead.astro, so elements
  * are hidden before first paint rather than flashing in and out. Without JS
  * they simply stay visible — the reveal is decoration, never a gate on content.
+ *
+ * Shared by both layouts; each stylesheet defines how its own `.reveal` looks.
  */
 interface Props {
   /** Fraction of the element that must be on screen before it reveals. */

@@ -1,0 +1,30 @@
+---
+/**
+ * Antetítulo con filete. Texto pequeño: tracking positivo y peso semibold
+ * para que siga legible también sobre cristal.
+ */
+interface Props {
+  tone?: "light" | "dark";
+  align?: "start" | "center";
+  class?: string;
+}
+
+const { tone = "light", align = "start", class: className } = Astro.props;
+const isDark = tone === "dark";
+---
+
+<p
+  class:list={[
+    "flex items-center gap-3 text-[0.6875rem] font-semibold uppercase leading-none tracking-[0.24em]",
+    align === "center" && "justify-center",
+    isDark ? "text-darkGray/85" : "text-warmGray",
+    className,
+  ]}
+>
+  <span
+    class:list={["h-px w-8 shrink-0", isDark ? "bg-darkGray/45" : "bg-warmGray/55"]}
+    aria-hidden="true"
+  >
+  </span>
+  <slot />
+</p>

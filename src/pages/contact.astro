@@ -1,0 +1,60 @@
+---
+import Layout from "@/layouts/HomeLayout.astro";
+import ContactHero from "@/components/contact/ContactHero.astro";
+import ContactDetails from "@/components/contact/ContactDetails.astro";
+import ContactForm from "@/components/contact/ContactForm";
+import Container from "@/components/homeShared/ui/Container.astro";
+import { homeData } from "@/data/home";
+
+export const prerender = true;
+
+const { contact } = homeData;
+---
+
+<Layout
+  title={`Contacto | Zerho Arquitectura`}
+  description={`${contact.sectionTitle}. ${contact.closingMessage}`}
+>
+  <ContactHero contact={contact} />
+
+  <section class="contact-body relative isolate overflow-clip py-20 sm:py-28">
+    <div class="halo halo--a" aria-hidden="true"></div>
+    <div class="halo halo--b" aria-hidden="true"></div>
+
+    <Container class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <div class="lg:col-span-5">
+        <ContactDetails contact={contact} />
+      </div>
+      <div class="reveal lg:col-span-7" style="--reveal-delay: 120ms">
+        <ContactForm client:visible />
+      </div>
+    </Container>
+  </section>
+</Layout>
+
+<style>
+  /* Color suave detrás para que el cristal claro tenga algo que difuminar. */
+  .halo {
+    position: absolute;
+    z-index: -1;
+    border-radius: 9999px;
+    filter: blur(90px);
+    pointer-events: none;
+  }
+
+  .halo--a {
+    top: 4rem;
+    right: -6rem;
+    width: 30rem;
+    height: 30rem;
+    background: rgb(194 182 170 / 0.55);
+  }
+
+  .halo--b {
+    bottom: -4rem;
+    left: -8rem;
+    width: 26rem;
+    height: 26rem;
+    background: rgb(147 119 74 / 0.22);
+  }
+</style>

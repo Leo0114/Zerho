@@ -1,14 +1,14 @@
 ---
 import "@/styles/global.css";
-import { ClientRouter } from "astro:transitions";
-import { SEO } from "astro-seo";
 import { SITE } from "@/data/site";
+import BaseHead from "./BaseHead.astro";
 import SiteHeader from "@/components/shared/SiteHeader.astro";
 import SiteFooter from "@/components/shared/SiteFooter.astro";
 import ScrollReveal from "@/components/shared/ScrollReveal.astro";
 import ScrollTop from "@/components/shared/ScrollTop.astro";
 import StickyVisit from "@/components/shared/StickyVisit.astro";
 
+/** Preventas: las fichas de residencia (y el 404, que las ofrece). */
 interface Props {
   title: string;
   description: string;
@@ -29,11 +29,6 @@ const {
   showSections = true,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
-const socialImage = image
-  ? new URL(image.src, Astro.site).toString()
-  : undefined;
-
 const fullTitle = title.includes(SITE.name) ? title : `${title} · ${SITE.name}`;
 ---
 
@@ -42,46 +37,8 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} · ${SITE.name}`
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#333a30" />
-    <link rel="icon" type="image/png" href="/ico.png" />
-    <link rel="icon" href="/ico.png" />
 
-    <SEO
-      title={fullTitle}
-      description={description}
-      canonical={canonical}
-      openGraph={{
-        basic: {
-          title: fullTitle,
-          type: "website",
-          image: socialImage ?? new URL("/favicon.svg", Astro.site).toString(),
-          url: canonical,
-        },
-        optional: {
-          description,
-          siteName: SITE.name,
-          locale: "es_MX",
-        },
-      }}
-      twitter={{
-        card: "summary_large_image",
-        title: fullTitle,
-        description,
-      }}
-    />
-
-    <!--
-      Marca el documento como "con JavaScript" antes del primer pintado. Sin
-      esto, los elementos con `.reveal` se verían un instante y desaparecerían
-      al arrancar el observador; y sin JS se quedan visibles, que es lo
-      correcto: la animación decora, no condiciona la lectura.
-    -->
-    <script is:inline>
-      document.documentElement.classList.add("js");
-    </script>
-
-    <ClientRouter />
+    <BaseHead title={fullTitle} description={description} image={image?.src} />
   </head>
 
   <body class="bg-canvas text-ink antialiased">

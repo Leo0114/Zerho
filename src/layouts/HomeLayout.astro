@@ -1,0 +1,66 @@
+---
+import "@/styles/newIndex.css";
+import { homeData } from "@/data/home";
+import BaseHead from "./BaseHead.astro";
+import Navbar from "@/components/homeShared/Navbar.astro";
+import Footer from "@/components/homeShared/Footer.astro";
+import SmoothScroll from "@/components/homeShared/SmoothScroll.astro";
+import ScrollReveal from "@/components/shared/ScrollReveal.astro";
+
+/** Estudio: portada y contacto. Las fichas usan PreventasLayout. */
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { seo } = homeData;
+const { title = seo.title, description = seo.metaDescription } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap"
+    />
+
+    <BaseHead title={title} description={description} keywords={seo.keywords} />
+  </head>
+  <body class="min-h-svh">
+    <a href="#main" class="skip-link">Saltar al contenido</a>
+    <Navbar />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <SmoothScroll />
+    <ScrollReveal />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-darkGray);
+    background: var(--color-primary);
+    transform: translateY(-200%);
+    transition: transform 400ms var(--ease-spring);
+  }
+
+  .skip-link:focus-visible {
+    transform: none;
+  }
+</style>
