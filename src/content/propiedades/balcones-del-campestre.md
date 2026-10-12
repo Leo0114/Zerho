@@ -27,7 +27,7 @@ highlights:
   - label: Cochera
     value: 3 autos
   - label: Entrega
-    value: 20 meses
+    value: 15 meses
 
 amenities:
   - label: Terraza exterior
@@ -206,7 +206,7 @@ financing:
   priceNote: Precio fijo desde el contrato. Sin ajustes por inflación, sin costos ocultos y sin incrementos durante la obra.
   downPaymentNote: Al firmar el contrato se escritura el terreno a nombre del comprador. Tu inversión queda garantizada con un activo real desde el día uno.
   balanceTerms: Saldo en aportaciones mensuales el día 1° de cada mes, vinculadas al avance de obra verificable.
-  deliveryMonths: 20
+  deliveryMonths: 15
   conditions: El precio y el plazo son fijos, condicionados a no realizar modificaciones al proyecto. Cualquier cambio se fija en tiempo y costo adicional antes de ejecutarse.
 ---
 
@@ -223,7 +223,7 @@ su propio espacio, sin que nadie tenga que ceder el suyo.
 
 Mientras otras obras abren el presupuesto con cada cambio, aquí firmas a
 precio alzado: el contrato define marca, sistema y espesor de cada partida
-antes de la primera aportación. En 18 meses recibes las llaves —y si algo
+antes de la primera aportación. En 15 meses recibes las llaves —y si algo
 no está como se firmó, Zerho responde diez años más.
 
 > Entendemos que tu hogar es el activo más importante de tu patrimonio y el

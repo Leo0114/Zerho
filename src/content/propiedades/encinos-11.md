@@ -27,7 +27,7 @@ highlights:
   - label: Cochera
     value: 6 autos
   - label: Entrega
-    value: 24 meses
+    value: 20 meses
 
 amenities:
   - label: Alberca

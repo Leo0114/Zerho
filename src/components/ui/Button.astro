@@ -74,7 +74,11 @@ const Tag = href ? "a" : "button";
 >
   {
     icon && iconPosition === "leading" && (
-      <Icon name={icon} class="h-4 w-4 shrink-0" strokeWidth={1.9} />
+      <Icon
+        name={icon}
+        class="h-4 w-4 shrink-0 transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:scale-110"
+        strokeWidth={1.9}
+      />
     )
   }
   <slot />
