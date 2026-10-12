@@ -22,7 +22,7 @@ export const SITE = {
   contactPerson: "Ana Treviño",
   email: "atrevino@arquitectosasociados.mx",
   phone: "+52 81 2025 3696",
-  phoneHref: "528120253696",
+  phoneHref: "+528120253696",
   whatsapp: "528120253696",
   city: "San Pedro Garza García, Nuevo León",
 } as const;
