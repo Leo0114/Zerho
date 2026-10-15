@@ -20,7 +20,7 @@ export const SITE = {
   // por la persona, el correo y los teléfonos definitivos antes de publicar.
   /** Persona que atiende las visitas; da nombre y rostro al contacto. */
   contactPerson: "Ana Treviño",
-  email: "atrevino@arquitectosasociados.mx",
+  email: "atrevino@zerho.mx",
   phone: "+52 81 2025 3696",
   phoneHref: "+528120253696",
   whatsapp: "528120253696",

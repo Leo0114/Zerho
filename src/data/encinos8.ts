@@ -177,7 +177,7 @@ export const encinos8: PropiedadResidencial = {
     slogan: "Construímos su legado, ustedes las historias",
     telefono: "+52 (81) 1965 8330",
     website: "arquitectosasociados.mx",
-    emailContacto: "atrevino@arquitectosasociados.mx",
+    emailContacto: "atrevino@zerho.mx",
     agenteContacto: "Arq. Ana Treviño Gaona",
   },
 

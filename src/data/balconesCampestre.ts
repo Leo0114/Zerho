@@ -198,6 +198,6 @@ export const balconesCampestreData = {
     phone: "+52 (81) 1965 8330",
     website: "arquitectosasociados.mx",
     contactPerson: "Arq. Ana Treviño Gaona",
-    email: "atrevino@arquitectosasociados.mx",
+    email: "atrevino@zerho.mx",
   },
 };
