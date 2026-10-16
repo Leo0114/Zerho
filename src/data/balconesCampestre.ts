@@ -3,7 +3,7 @@ export const balconesCampestreData = {
     title: "Balcones del Campestre",
     number: "407",
     location: "SAN PEDRO GARZA GARCÍA",
-    price: "$42,000,000 mxn",
+    price: "$38,000,000 mxn",
     website: "ARQUITECTOSASOCIADOS.MX",
   },
   commitment: {

@@ -2,7 +2,7 @@
 title: Balcones del Campestre
 location: San Pedro Garza García, Nuevo León
 status: Preventa exclusiva
-price: 42000000
+price: 38000000
 currency: MXN
 featured: false
 order: 2
