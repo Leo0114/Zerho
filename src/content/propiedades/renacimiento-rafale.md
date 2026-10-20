@@ -107,7 +107,7 @@ construction:
 plans:
   - label: Planta Baja
     caption: Cochera techada, sala formal, comedor formal, cocina con alacena, despacho, lavandería y recibidor.
-    image: ../../assets/images/planos/renacimientoRafael/planta-baja.jpeg
+    image: ../../assets/images/planos/renacimientoRafael/planta-baja.png
     spaces:
       - name: Cochera
       - name: Sala formal
@@ -119,7 +119,7 @@ plans:
       - name: Recibidor
   - label: Sótano 1
     caption: Cuatro recámaras con vestidor y baño, área de estudio y balcones.
-    image: ../../assets/images/planos/renacimientoRafael/sotano-1.jpeg
+    image: ../../assets/images/planos/renacimientoRafael/sotano-1.png
     spaces:
       - name: Recámara principal
       - name: Vestidor principal
@@ -129,7 +129,7 @@ plans:
       - name: Área de estudio
   - label: Sótano 2
     caption: Área social exterior con alberca infinita, asoleadero, terraza, bodega y jardín natural.
-    image: ../../assets/images/planos/renacimientoRafael/sotano-2.jpeg
+    image: ../../assets/images/planos/renacimientoRafael/sotano-2.png
     spaces:
       - name: Alberca infinita
       - name: Asoleadero húmedo
