@@ -90,8 +90,6 @@ const hasProgram = plans.some((plan) => plan.spaces?.length);
               data-active={i === 0 ? "" : undefined}
               id={`${viewerId}-panel-${i}`}
               role="tabpanel"
-              target="_blank"
-              rel="noreferrer"
               aria-label={`Ampliar ${caption}`}
               class="plan-panel group absolute inset-0 block focus-visible:outline-offset-4"
             >
@@ -244,8 +242,10 @@ const hasProgram = plans.some((plan) => plan.spaces?.length);
       };
 
       tabs.forEach((tab, i) => {
-        // En pointerdown, no en click: la lámina cambia en cuanto se toca.
-        const onPointerDown = () => select(i);
+        // En click (no pointerdown): en mobile el pointerdown se dispara
+        // también durante el scroll, lo que causaba cambios accidentales de
+        // pestaña al intentar hacer scroll sobre los tabs.
+        const onClick = () => select(i);
         const onKeyDown = (event: KeyboardEvent) => {
           const delta =
             event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
@@ -256,10 +256,10 @@ const hasProgram = plans.some((plan) => plan.spaces?.length);
           tabs[next]!.focus();
         };
 
-        tab.addEventListener("pointerdown", onPointerDown);
+        tab.addEventListener("click", onClick);
         tab.addEventListener("keydown", onKeyDown);
         listeners.push(() => {
-          tab.removeEventListener("pointerdown", onPointerDown);
+          tab.removeEventListener("click", onClick);
           tab.removeEventListener("keydown", onKeyDown);
         });
       });
