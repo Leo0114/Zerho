@@ -17,8 +17,12 @@ export default defineConfig({
   // Direcciones publicadas antes de la unión, cuando las fichas colgaban de
   // la raíz. La destacada vivía en `/`, que ahora es la portada del estudio.
   redirects: {
+    "/encinos-8": "/preventas",
+    "/preventas/encinos-8": "/preventas",
     "/encinos-11": "/preventas/encinos-11",
     "/balcones-del-campestre": "/preventas/balcones-del-campestre",
+    "/renacimiento-rafale": "/preventas/renacimiento-rafale",
+    "/renacimiento-rafael": "/preventas/renacimiento-rafale",
   },
 
   output: "server",
