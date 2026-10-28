@@ -33,6 +33,11 @@ const { title = seo.title, description = seo.metaDescription } = Astro.props;
     <BaseHead title={title} description={description} keywords={seo.keywords} />
   </head>
   <body class="min-h-svh">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WHGGR4GR"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <a href="#main" class="skip-link">Saltar al contenido</a>
     <Navbar />
     <main id="main">
