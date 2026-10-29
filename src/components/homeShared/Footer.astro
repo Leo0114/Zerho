@@ -68,19 +68,23 @@ const year = new Date().getFullYear();
         <p class="mt-4 max-w-xs text-[0.9375rem] text-darkGray/60 text-pretty">
           Ingresa tu correo y nos pondremos en contacto contigo a la brevedad para hablar de tu proyecto.
         </p>
-        <form class="mt-5 flex flex-col gap-3 relative" action={CONTACT_PATH} method="GET">
+        <form id="footer-contact-form" class="mt-5 flex flex-col gap-3 relative" action={CONTACT_PATH} method="GET">
           <input 
             type="email" 
+            name="email"
+            id="footer-email-input"
             placeholder="Tu correo electrónico" 
             class="w-full rounded-full border border-darkGray/20 bg-darkGray/5 px-5 py-3 text-sm text-darkGray placeholder-darkGray/40 outline-none transition-colors focus:border-darkGray/60 focus:bg-darkGray/10" 
             required 
           />
           <button 
             type="submit" 
-            class="w-full rounded-full bg-white px-5 py-3 text-sm font-semibold text-black shadow-md transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            id="footer-submit-btn"
+            class="w-full rounded-full bg-white px-5 py-3 text-sm font-semibold text-black shadow-md transition-transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer disabled:opacity-70 disabled:hover:scale-100"
           >
             Contactar
           </button>
+          <p id="footer-msg" class="hidden text-xs text-darkGray/80 mt-1 font-medium text-center"></p>
         </form>
       </div>
     </div>
@@ -143,3 +147,54 @@ const year = new Date().getFullYear();
     color: var(--color-darkGray);
   }
 </style>
+
+<script>
+  function setupFooterForm() {
+    const form = document.getElementById("footer-contact-form") as HTMLFormElement | null;
+    if (!form || form.dataset.bound === "true") return;
+    form.dataset.bound = "true";
+
+    form.addEventListener("submit", async (e) => {
+      const emailInput = document.getElementById("footer-email-input") as HTMLInputElement | null;
+      const btn = document.getElementById("footer-submit-btn") as HTMLButtonElement | null;
+      const msg = document.getElementById("footer-msg");
+      if (!emailInput || !btn) return;
+
+      const email = emailInput.value.trim();
+      if (!email) return;
+
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = "Enviando…";
+
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        if (res.ok) {
+          btn.textContent = "✓ Recibido";
+          btn.classList.add("!bg-[#333a30]", "!text-white");
+          emailInput.value = "";
+          if (msg) {
+            msg.textContent = "¡Gracias! Te contactaremos a la brevedad.";
+            msg.classList.remove("hidden");
+          }
+        } else {
+          window.location.href = `/contact?email=${encodeURIComponent(email)}`;
+        }
+      } catch {
+        window.location.href = `/contact?email=${encodeURIComponent(email)}`;
+      } finally {
+        setTimeout(() => {
+          btn.disabled = false;
+        }, 4000);
+      }
+    });
+  }
+
+  setupFooterForm();
+  document.addEventListener("astro:page-load", setupFooterForm);
+</script>
