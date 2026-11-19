@@ -27,12 +27,20 @@ interface CompareSliderProps {
   renderImg: string;
   realidadImg: string;
   name?: string;
+  realidadClassName?: string;
+  realidadStyle?: React.CSSProperties;
+  renderClassName?: string;
+  renderStyle?: React.CSSProperties;
 }
 
 const CompareSlider: React.FC<CompareSliderProps> = ({
   renderImg,
   realidadImg,
   name,
+  realidadClassName = "",
+  realidadStyle,
+  renderClassName = "",
+  renderStyle,
 }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -54,7 +62,8 @@ const CompareSlider: React.FC<CompareSliderProps> = ({
         <img
           src={realidadImg}
           alt={`${name} Realidad`}
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          className={`absolute inset-0 w-full h-full object-cover pointer-events-none ${realidadClassName}`}
+          style={realidadStyle}
         />
         {/* Realidad Badge — always inside image */}
         <div className="absolute top-3 sm:top-6 right-3 sm:right-6 bg-primary text-white text-[10px] sm:text-sm font-semibold px-2.5 sm:px-4 py-1 sm:py-2 rounded-full shadow-md backdrop-blur-sm pointer-events-none z-[5]">
@@ -69,7 +78,8 @@ const CompareSlider: React.FC<CompareSliderProps> = ({
           <img
             src={renderImg}
             alt={`${name} Render`}
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover ${renderClassName}`}
+            style={renderStyle}
           />
           {/* Render Badge — always inside image */}
           <div className="absolute top-3 sm:top-6 left-3 sm:left-6 bg-ink/80 text-white text-[10px] sm:text-sm font-semibold px-2.5 sm:px-4 py-1 sm:py-2 rounded-full shadow-md backdrop-blur-sm">
@@ -117,7 +127,17 @@ const CompareSlider: React.FC<CompareSliderProps> = ({
   );
 };
 
-const sliderData = [
+interface SliderItem {
+  name: string;
+  render: string;
+  realidad: string;
+  realidadClassName?: string;
+  realidadStyle?: React.CSSProperties;
+  renderClassName?: string;
+  renderStyle?: React.CSSProperties;
+}
+
+const sliderData: SliderItem[] = [
   {
     name: "Cuencamé 1",
     render: Cuencame1Render.src,
@@ -128,7 +148,13 @@ const sliderData = [
     render: Cuencame2Render.src,
     realidad: Cuencame2Realidad.src,
   },
-  { name: "Encinos", render: EncinosRender.src, realidad: EncinosRealidad.src },
+  {
+    name: "Encinos",
+    render: EncinosRender.src,
+    realidad: EncinosRealidad.src,
+    realidadClassName: "object-top",
+    realidadStyle: { objectPosition: "center top" },
+  },
   {
     name: "Encinos 1",
     render: Encinos1Render.src,
@@ -167,6 +193,10 @@ export default function RenderVsRealidad() {
                 name={item.name}
                 renderImg={item.render}
                 realidadImg={item.realidad}
+                realidadClassName={item.realidadClassName}
+                realidadStyle={item.realidadStyle}
+                renderClassName={item.renderClassName}
+                renderStyle={item.renderStyle}
               />
             </div>
           </SwiperSlide>
