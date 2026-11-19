@@ -12,14 +12,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/netlify": "^8.2.5",
-    "@astrojs/react": "^6.0.5",
-    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/netlify": "^8.2.14",
+    "@astrojs/react": "^7.1.9",
+    "@astrojs/sitemap": "^3.7.6",
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/vite": "^4.2.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro": "^7.3.2",
+    "astro": "^7.4.13",
     "astro-icon": "^1.1.5",
     "astro-robots-txt": "^1.0.0",
     "astro-seo": "^1.1.0",

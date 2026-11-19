@@ -2,7 +2,7 @@
 title: Renacimiento Rafael 1206
 location: Renacimiento
 status: Preventa exclusiva
-price: 46000000
+price: 52000000
 currency: MXN
 featured: false
 order: 3

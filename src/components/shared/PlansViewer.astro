@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import Icon from "@/components/ui/Icon.astro";
 import Modal from "@/components/ui/Modal.astro";
 import ModalTrigger from "@/components/ui/ModalTrigger.astro";
@@ -24,6 +24,38 @@ const { plans, subject, class: className = "" } = Astro.props;
 const viewerId = `plans-${subject.toLowerCase().replace(/[^a-z0-9]+/gi, "-")}`;
 const programId = `${viewerId}-programa`;
 const hasProgram = plans.some((plan) => plan.spaces?.length);
+
+/**
+ * Versión para el visor a pantalla completa. Los originales miden
+ * 15360 × 8640 px: decodificados ocupan ~530 MB cada uno y PhotoSwipe precarga
+ * las láminas vecinas, así que Safari en iOS mataba la pestaña por memoria y
+ * recargaba la página al abrir un plano o pasar al siguiente. Aquí se sirve
+ * una versión acotada (suficiente para leer cotas con zoom) y una intermedia
+ * para la vista ajustada a pantalla.
+ */
+const LIGHTBOX_MAX_WIDTH = 3200;
+const LIGHTBOX_FIT_WIDTH = 1600;
+
+const zoomable = await Promise.all(
+  plans.map(async (plan) => {
+    const width = Math.min(LIGHTBOX_MAX_WIDTH, plan.image.width);
+    const height = Math.round((plan.image.height / plan.image.width) * width);
+    const fitWidth = Math.min(LIGHTBOX_FIT_WIDTH, width);
+    const [full, fit] = await Promise.all([
+      getImage({ src: plan.image, width, format: "webp", quality: 90 }),
+      getImage({ src: plan.image, width: fitWidth, format: "webp", quality: 90 }),
+    ]);
+    return {
+      src: full.src,
+      srcset:
+        fitWidth < width
+          ? `${fit.src} ${fitWidth}w, ${full.src} ${width}w`
+          : undefined,
+      width,
+      height,
+    };
+  }),
+);
 ---
 
 {
@@ -80,11 +112,13 @@ const hasProgram = plans.some((plan) => plan.spaces?.length);
       >
         {plans.map((plan, i) => {
           const caption = `${subject} — ${plan.label}`;
+          const zoom = zoomable[i]!;
           return (
             <a
-              href={plan.image.src}
-              data-pswp-width={plan.image.width}
-              data-pswp-height={plan.image.height}
+              href={zoom.src}
+              data-pswp-srcset={zoom.srcset}
+              data-pswp-width={zoom.width}
+              data-pswp-height={zoom.height}
               data-pswp-caption={caption}
               data-plan-panel={i}
               data-active={i === 0 ? "" : undefined}

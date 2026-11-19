@@ -35,6 +35,9 @@ function mountLightbox(root: HTMLElement) {
     children: "a",
     bgOpacity: 0.94,
     loop: true,
+    // Solo la lámina vecina en cada sentido: menos imágenes decodificadas a
+    // la vez, que es lo que agota la memoria en móviles.
+    preload: [1, 1],
     // Zoom desde la miniatura: la foto crece desde donde estaba, no aparece
     // de la nada en el centro de la pantalla.
     showHideAnimationType: animation,
